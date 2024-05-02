@@ -1,9 +1,41 @@
+import models.Point;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 
 import static java.lang.Math.*;
 
 public class Methods {
+
+
+    public static void floodFill(int x, int y, Color a, BufferedImage buffer) {
+        int targetColor = buffer.getRGB(x, y);
+        if(targetColor == a.getRGB()) {
+            return;
+        }
+
+        Queue<Point> queue = new LinkedList<>();
+        queue.add(new Point(x, y));
+
+        while(!queue.isEmpty()) {
+            Point p = queue.poll();
+
+            if(buffer.getRGB(p.getX(), p.getY()) == a.getRGB()) {
+                continue;
+            }
+
+            buffer.setRGB(p.getX(), p.getY(), a.getRGB());
+            queue.add(new Point(p.getX() - 1, p.getY()));
+            queue.add(new Point(p.getX() + 1, p.getY()));
+            queue.add(new Point(p.getY(), p.getX() - 1));
+            queue.add(new Point(p.getY(), p.getX() + 1));
+        }
+    }
+
+
     public static void basicCircle(int xc, int yc, int r, Color a, BufferedImage buffer) {
         int x1 = xc - r;
         int x2 = xc + r;
