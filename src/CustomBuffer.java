@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.function.Function;
 
 import static java.lang.Math.*;
 
@@ -56,8 +57,8 @@ public class CustomBuffer extends BufferedImage{
             double temp = sqrt(Math.pow(r, 2) - Math.pow((y - yc), 2));
             double xa = xc + temp;
             double xb = xc - temp;
-            pixel((int) xa, y, a, 255, this);
-            pixel((int) xb, y, a, 255, this);
+            pixel((int) xa, y, a, 255);
+            pixel((int) xb, y, a, 255);
         }
     }
     public void BresenhamLine(int x1, int y1, int x2, int y2, Color a) {
@@ -90,7 +91,7 @@ public class CustomBuffer extends BufferedImage{
                     p += 2 * dy;
                 }
                 x += incX;
-                pixel(x, y, a, 255, this);
+                pixel(x, y, a, 255);
             }
         }
         else {
@@ -104,7 +105,7 @@ public class CustomBuffer extends BufferedImage{
                     p += 2 * dx;
                 }
                 y += incY;
-                pixel(x, y, a, 255, this);
+                pixel(x, y, a, 255);
             }
         }
     }
@@ -126,31 +127,31 @@ public class CustomBuffer extends BufferedImage{
         if (abs(m) <= 1){
             double y = y1;
             for(int x = x1; x <= x2; x++){
-                pixel(x, (int) y, a, 255, this);
+                pixel(x, (int) y, a, 255);
                 y += m;
             }
         }
         else {
             double x = x1;
             for(int y = y1; y <= y2; y++){
-                pixel((int) x, y, a, 255, this);
+                pixel((int) x, y, a, 255);
                 x += (1/m);
             }
         }
     }
 
     // this method must be called repeatedly in a period of time to create a movement
-    public void moveInCircles(double t, int r, int x1, int y1, Graphics graphics, JPanel panel) {
-        double x = r * cos(t) + x1;
-        double y = r * sin(t) + y1;
+    public void movement(double t, int x1, int x2, Graphics graphics, JPanel panel, Function<Double, Integer> xParam, Function<Double, Integer> yParam) {
+        int x = xParam.apply(t) + x1;
+        int y = yParam.apply(t) + x2;
 
-        graphics.drawImage(this, (int) floor(x), (int) floor(y), panel);
+        graphics.drawImage(this, x, y, panel);
     }
 
-    public static void pixel(int x, int y, Color a, int alpha, BufferedImage buffer) {
-        Color current = new Color(buffer.getRGB(x, y), true);
+    public void pixel(int x, int y, Color a, int alpha) {
+        Color current = new Color(this.getRGB(x, y), true);
         if(current.getAlpha() < alpha) {
-            buffer.setRGB(x, y, new Color(a.getRed(), a.getGreen(), a.getBlue(), alpha).getRGB());
+            this.setRGB(x, y, new Color(a.getRed(), a.getGreen(), a.getBlue(), alpha).getRGB());
         }
     }
 }

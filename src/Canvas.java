@@ -2,6 +2,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
+
 public class Canvas extends JFrame implements Runnable{
 
 
@@ -9,6 +12,7 @@ public class Canvas extends JFrame implements Runnable{
     private final JPanel panel;
     private boolean backgroundPainted = false;
     private double t;
+    private CustomBuffer circleBuffer = new CustomBuffer(11, 11, BufferedImage.TYPE_INT_ARGB);
 
     public Canvas(int width, int height) {
         canvas = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
@@ -36,14 +40,15 @@ public class Canvas extends JFrame implements Runnable{
         }
 
         getGraphics().drawImage(canvas, 0, 0, panel);
-
-        CustomBuffer circleBuffer = new CustomBuffer(11, 11, BufferedImage.TYPE_INT_ARGB);
-
         circleBuffer.basicCircle(5, 5,4, Color.red);
-
         circleBuffer.floodFill(5, 5, Color.red);
-
-        circleBuffer.moveInCircles(t, 100, 300, 300, getGraphics(), panel);
+        circleBuffer.movement(t, 400, 400, getGraphics(), panel,
+        (Double t) -> {
+            return (int) ((int) 100 * cos(t));
+        },
+        (Double t) -> {
+            return (int) ((int) 100 * sin(t));
+        });
     }
 
     @Override
