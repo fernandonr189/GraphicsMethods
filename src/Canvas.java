@@ -2,12 +2,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class Canvas extends JFrame {
+public class Canvas extends JFrame implements Runnable{
 
 
-    private BufferedImage canvas;
-    private JPanel panel;
-
+    private final BufferedImage canvas;
+    private final JPanel panel;
+    private boolean backgroundPainted = false;
+    private double t;
 
     public Canvas(int width, int height) {
         canvas = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
@@ -19,20 +20,49 @@ public class Canvas extends JFrame {
         panel = new JPanel();
         panel.setSize(width, height);
         add(panel);
-
-
         setVisible(true);
+
+        new Thread(this).start();
     }
 
     @Override
     public void paint(Graphics g) {
-        super.paint(g);
-        //Methods.DDALine(100, 100, 200, 100, Color.red, canvas);
-        //Methods.DDALine(200, 100, 200, 200, Color.red, canvas);
-        //Methods.DDALine(200, 200, 100, 200, Color.red, canvas);
-        //Methods.DDALine(100, 200, 100, 100, Color.red, canvas);
-        Methods.basicCircle(150, 150, 110, Color.red, canvas);
-        Methods.floodFill(150, 150, Color.red, canvas);
+        if(!backgroundPainted) {
+            super.paint(g);
+            Graphics backgroundGraphics = canvas.getGraphics();
+            backgroundGraphics.setColor(Color.black);
+            backgroundGraphics.fillRect(0, 0, canvas.getHeight(), canvas.getWidth());
+            backgroundPainted = true;
+        }
+
         getGraphics().drawImage(canvas, 0, 0, panel);
+
+        BufferedImage circleBuffer = new BufferedImage(11, 11, BufferedImage.TYPE_INT_ARGB);
+
+        Methods.BresenhamLine(1, 1, 9, 9, Color.red, circleBuffer);
+
+        Methods.moveInCircles(t, 100, getGraphics(), circleBuffer, panel);
+    }
+
+    @Override
+    public void update(Graphics g) {
+        super.update(g);
+    }
+
+    @Override
+    public void run() {
+        int counter = 0;
+        t = 0;
+        while(true) {
+            try {
+                repaint();
+                Thread.sleep(1);
+                t = (double) System.currentTimeMillis() / 1000;
+                counter++;
+            } catch (InterruptedException e) {
+                System.out.println("Frame: " + counter + " -> " + e);
+                throw new RuntimeException(e);
+            }
+        }
     }
 }

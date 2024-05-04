@@ -1,7 +1,9 @@
 import models.Point;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -133,6 +135,14 @@ public class Methods {
                 x += (1/m);
             }
         }
+    }
+
+    // sqrt(r² - (y - b)²) + a
+    public static void moveInCircles(double t, int r, Graphics graphics, BufferedImage entity, JPanel panel) {
+        double x = r * cos(t) + 150;
+        double y = r * sin(t) + 150;
+
+        graphics.drawImage(entity, (int) floor(x), (int) floor(y), panel);
     }
 
     public static void pixel(int x, int y, Color a, int alpha, BufferedImage buffer) {
