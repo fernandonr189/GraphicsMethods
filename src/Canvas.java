@@ -37,11 +37,13 @@ public class Canvas extends JFrame implements Runnable{
 
         getGraphics().drawImage(canvas, 0, 0, panel);
 
-        BufferedImage circleBuffer = new BufferedImage(11, 11, BufferedImage.TYPE_INT_ARGB);
+        CustomBuffer circleBuffer = new CustomBuffer(11, 11, BufferedImage.TYPE_INT_ARGB);
 
-        Methods.BresenhamLine(1, 1, 9, 9, Color.red, circleBuffer);
+        circleBuffer.basicCircle(5, 5,4, Color.red);
 
-        Methods.moveInCircles(t, 100, getGraphics(), circleBuffer, panel);
+        circleBuffer.floodFill(5, 5, Color.red);
+
+        circleBuffer.moveInCircles(t, 100, 300, 300, getGraphics(), panel);
     }
 
     @Override
@@ -56,7 +58,7 @@ public class Canvas extends JFrame implements Runnable{
         while(true) {
             try {
                 repaint();
-                Thread.sleep(1);
+                Thread.sleep(6);
                 t = (double) System.currentTimeMillis() / 1000;
                 counter++;
             } catch (InterruptedException e) {

@@ -3,18 +3,20 @@ import models.Point;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.nio.Buffer;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
 import static java.lang.Math.*;
 
-public class Methods {
+public class CustomBuffer extends BufferedImage{
 
 
-    public static void floodFill(int x, int y, Color a, BufferedImage buffer) {
-        int targetColor = buffer.getRGB(x, y);
+    public CustomBuffer(int width, int height, int imageType) {
+        super(width, height, imageType);
+    }
+
+    public void floodFill(int x, int y, Color a) {
+        int targetColor = this.getRGB(x, y);
         if(targetColor == a.getRGB()) {
             return;
         }
@@ -25,11 +27,11 @@ public class Methods {
         while(!queue.isEmpty()) {
             Point p = queue.poll();
 
-            if(buffer.getRGB(p.getX(), p.getY()) == a.getRGB()) {
+            if(this.getRGB(p.getX(), p.getY()) == a.getRGB()) {
                 continue;
             }
 
-            buffer.setRGB(p.getX(), p.getY(), a.getRGB());
+            this.setRGB(p.getX(), p.getY(), a.getRGB());
             queue.add(new Point(p.getX() - 1, p.getY()));
             queue.add(new Point(p.getX() + 1, p.getY()));
             queue.add(new Point(p.getY(), p.getX() - 1));
@@ -38,15 +40,15 @@ public class Methods {
     }
 
 
-    public static void basicCircle(int xc, int yc, int r, Color a, BufferedImage buffer) {
+    public void basicCircle(int xc, int yc, int r, Color a) {
         int x1 = xc - r;
         int x2 = xc + r;
         for (int x = x1; x <= x2; x++) {
             double temp = sqrt(Math.pow(r, 2) - Math.pow((x - xc), 2));
             double ya = yc + temp;
             double yb = yc - temp;
-            buffer.setRGB(x, (int) ya, a.getRGB());
-            buffer.setRGB(x, (int) yb, a.getRGB());
+            this.setRGB(x, (int) ya, a.getRGB());
+            this.setRGB(x, (int) yb, a.getRGB());
         }
         int y1 = yc - r;
         int y2 = yc + r;
@@ -54,11 +56,11 @@ public class Methods {
             double temp = sqrt(Math.pow(r, 2) - Math.pow((y - yc), 2));
             double xa = xc + temp;
             double xb = xc - temp;
-            pixel((int) xa, y, a, 255, buffer);
-            pixel((int) xb, y, a, 255, buffer);
+            pixel((int) xa, y, a, 255, this);
+            pixel((int) xb, y, a, 255, this);
         }
     }
-    public static void BresenhamLine(int x1, int y1, int x2, int y2, Color a, BufferedImage buffer) {
+    public void BresenhamLine(int x1, int y1, int x2, int y2, Color a) {
         int dy = y2 - y1;
         int dx = x2 - x1;
         int x = x1;
@@ -88,7 +90,7 @@ public class Methods {
                     p += 2 * dy;
                 }
                 x += incX;
-                pixel(x, y, a, 255, buffer);
+                pixel(x, y, a, 255, this);
             }
         }
         else {
@@ -102,12 +104,12 @@ public class Methods {
                     p += 2 * dx;
                 }
                 y += incY;
-                pixel(x, y, a, 255, buffer);
+                pixel(x, y, a, 255, this);
             }
         }
     }
 
-    public static void DDALine(int x1, int y1, int x2, int y2, Color a, BufferedImage buffer) {
+    public void DDALine(int x1, int y1, int x2, int y2, Color a) {
         int dy = y2 - y1;
         int dx = x2 - x1;
         double m = (double) dy / dx;
@@ -124,25 +126,25 @@ public class Methods {
         if (abs(m) <= 1){
             double y = y1;
             for(int x = x1; x <= x2; x++){
-                pixel(x, (int) y, a, 255, buffer);
+                pixel(x, (int) y, a, 255, this);
                 y += m;
             }
         }
         else {
             double x = x1;
             for(int y = y1; y <= y2; y++){
-                pixel((int) x, y, a, 255, buffer);
+                pixel((int) x, y, a, 255, this);
                 x += (1/m);
             }
         }
     }
 
-    // sqrt(r² - (y - b)²) + a
-    public static void moveInCircles(double t, int r, Graphics graphics, BufferedImage entity, JPanel panel) {
-        double x = r * cos(t) + 150;
-        double y = r * sin(t) + 150;
+    // this method must be called repeatedly in a period of time to create a movement
+    public void moveInCircles(double t, int r, int x1, int y1, Graphics graphics, JPanel panel) {
+        double x = r * cos(t) + x1;
+        double y = r * sin(t) + y1;
 
-        graphics.drawImage(entity, (int) floor(x), (int) floor(y), panel);
+        graphics.drawImage(this, (int) floor(x), (int) floor(y), panel);
     }
 
     public static void pixel(int x, int y, Color a, int alpha, BufferedImage buffer) {
