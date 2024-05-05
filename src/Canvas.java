@@ -2,8 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-import static java.lang.Math.cos;
-import static java.lang.Math.sin;
+import static java.lang.Math.*;
 
 public class Canvas extends JFrame implements Runnable{
 
@@ -14,6 +13,7 @@ public class Canvas extends JFrame implements Runnable{
     private double t;
 
     CustomBuffer circleBuffer = new CustomBuffer(200, 200, BufferedImage.TYPE_INT_ARGB);
+    CustomBuffer squareBuffer = new CustomBuffer(200, 200, BufferedImage.TYPE_INT_ARGB);
 
     public Canvas(int width, int height) {
         canvas = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
@@ -35,6 +35,13 @@ public class Canvas extends JFrame implements Runnable{
         circleBuffer.basicCircle(100, 100,80, Color.blue);
         circleBuffer.floodFill(100, 100, Color.blue);
         circleBuffer.DDALine(20, 20, 180, 180, Color.blue);
+
+        squareBuffer.BresenhamLine(20, 20, 180, 20, Color.red);
+        squareBuffer.BresenhamLine(180, 20, 180, 180, Color.red);
+        squareBuffer.BresenhamLine(180,180, 20, 180, Color.red);
+        squareBuffer.BresenhamLine(20,180, 20, 20, Color.red);
+        squareBuffer.floodFill(21, 21, Color.red);
+
     }
 
     @Override
@@ -63,8 +70,16 @@ public class Canvas extends JFrame implements Runnable{
         g2.drawImage(canvas, 0, 0, null);
 
         circleBuffer.movement(t, 300, 300, g2,
-                (Double t) -> (int) (250 * cos(t)),
-                (Double t) -> (int) (250 * sin(t)));
+                (Double t) -> (int) (250 * cos(t * 2)),
+                (Double t) -> (int) (250 * sin(t * 10)));
+
+        squareBuffer.movement(t, 300, 300, g2,
+                (Double t) -> - (int) (250 * cos(t)),
+                (Double t) -> 255);
+
+        squareBuffer.movement(t, 300, 300, g2,
+                (Double t) -> 255,
+                (Double t) -> (int) (250 * sin(t * 4)));
 
         g2.dispose();
         return newImage;
