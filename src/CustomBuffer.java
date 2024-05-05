@@ -28,7 +28,7 @@ public class CustomBuffer extends BufferedImage{
         while(!queue.isEmpty()) {
             Point p = queue.poll();
 
-            if(this.getRGB(p.getX(), p.getY()) == a.getRGB()) {
+            if(this.getRGB(p.getX(), p.getY()) != targetColor) {
                 continue;
             }
 
@@ -141,17 +141,16 @@ public class CustomBuffer extends BufferedImage{
     }
 
     // this method must be called repeatedly in a period of time to create a movement
-    public void movement(double t, int x1, int x2, Graphics graphics, JPanel panel, Function<Double, Integer> xParam, Function<Double, Integer> yParam) {
+    public void movement(double t, int x1, int y1, Graphics graphics, JPanel panel, Function<Double, Integer> xParam, Function<Double, Integer> yParam) {
         int x = xParam.apply(t) + x1;
-        int y = yParam.apply(t) + x2;
+        int y = yParam.apply(t) + y1;
 
-        graphics.drawImage(this, x, y, panel);
+        if(!graphics.drawImage(this, x, y, panel)) {
+            System.out.println("Not drawn");
+        }
     }
 
     public void pixel(int x, int y, Color a, int alpha) {
-        Color current = new Color(this.getRGB(x, y), true);
-        if(current.getAlpha() < alpha) {
-            this.setRGB(x, y, new Color(a.getRed(), a.getGreen(), a.getBlue(), alpha).getRGB());
-        }
+        this.setRGB(x, y, new Color(a.getRed(), a.getGreen(), a.getBlue(), alpha).getRGB());
     }
 }
