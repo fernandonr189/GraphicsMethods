@@ -1,6 +1,5 @@
-import models.Point;
+package models;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
@@ -11,9 +10,15 @@ import static java.lang.Math.*;
 
 public class CustomBuffer extends BufferedImage {
 
+    private BuildMethods builder;
 
-    public CustomBuffer(int width, int height, int imageType) {
+    public CustomBuffer(int width, int height, int imageType, BuildMethods builder) {
         super(width, height, imageType);
+        this.builder = builder;
+    }
+
+    public void build() {
+        builder.build(this);
     }
 
     public void floodFill(int x, int y, Color a) {

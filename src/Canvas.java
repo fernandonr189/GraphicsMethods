@@ -1,3 +1,7 @@
+import models.CircleBuilder;
+import models.CustomBuffer;
+import models.SquareBuilder;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -12,8 +16,10 @@ public class Canvas extends JFrame implements Runnable{
     private boolean backgroundPainted = false;
     private double t;
 
-    CustomBuffer circleBuffer = new CustomBuffer(200, 200, BufferedImage.TYPE_INT_ARGB);
-    CustomBuffer squareBuffer = new CustomBuffer(200, 200, BufferedImage.TYPE_INT_ARGB);
+    CircleBuilder circleBuilder = new CircleBuilder();
+    SquareBuilder squareBuilder = new SquareBuilder();
+    CustomBuffer circleBuffer = new CustomBuffer(200, 200, BufferedImage.TYPE_INT_ARGB, circleBuilder);
+    CustomBuffer squareBuffer = new CustomBuffer(200, 200, BufferedImage.TYPE_INT_ARGB, squareBuilder);
 
     public Canvas(int width, int height) {
         canvas = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
@@ -32,16 +38,8 @@ public class Canvas extends JFrame implements Runnable{
     }
 
     private void initializeEntities() {
-        circleBuffer.basicCircle(100, 100,80, Color.blue);
-        circleBuffer.floodFill(100, 100, Color.blue);
-        circleBuffer.DDALine(20, 20, 180, 180, Color.blue);
-
-        squareBuffer.BresenhamLine(20, 20, 180, 20, Color.red);
-        squareBuffer.BresenhamLine(180, 20, 180, 180, Color.red);
-        squareBuffer.BresenhamLine(180,180, 20, 180, Color.red);
-        squareBuffer.BresenhamLine(20,180, 20, 20, Color.red);
-        squareBuffer.floodFill(21, 21, Color.red);
-
+        circleBuffer.build();
+        squareBuffer.build();
     }
 
     @Override
@@ -93,7 +91,7 @@ public class Canvas extends JFrame implements Runnable{
         while(true) {
             try {
                 repaint();
-                Thread.sleep(6);
+                Thread.sleep(16);
                 t = (double) System.currentTimeMillis() / 1000;
                 counter++;
             } catch (InterruptedException e) {
