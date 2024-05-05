@@ -13,6 +13,8 @@ public class Canvas extends JFrame implements Runnable{
     private boolean backgroundPainted = false;
     private double t;
 
+    CustomBuffer circleBuffer = new CustomBuffer(200, 200, BufferedImage.TYPE_INT_ARGB);
+
     public Canvas(int width, int height) {
         canvas = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         setTitle("Metodos");
@@ -23,9 +25,16 @@ public class Canvas extends JFrame implements Runnable{
         panel.setSize(width, height);
         add(panel);
 
+
         setVisible(true);
 
         new Thread(this).start();
+    }
+
+    private void initializeEntities() {
+        circleBuffer.basicCircle(100, 100,80, Color.blue);
+        circleBuffer.floodFill(100, 100, Color.blue);
+        circleBuffer.DDALine(20, 20, 180, 180, Color.blue);
     }
 
     @Override
@@ -38,14 +47,10 @@ public class Canvas extends JFrame implements Runnable{
             backgroundPainted = true;
             g.drawImage(canvas, 0, 0, panel);
         }
-        g.drawImage(canvas, 0, 0, null);
-        CustomBuffer circleBuffer = new CustomBuffer(200, 200, BufferedImage.TYPE_INT_ARGB);
-        circleBuffer.basicCircle(100, 100,80, Color.blue);
-        circleBuffer.floodFill(100, 100, Color.blue);
-        circleBuffer.DDALine(20, 20, 180, 180, Color.blue);
+        g.drawImage(canvas, 0, 0, panel);
         circleBuffer.movement(t, 300, 300, getGraphics(), panel,
-            (Double t) -> (int) (250 * cos(t)),
-            (Double t) -> (int) (250 * sin(t)));
+                (Double t) -> (int) (250 * cos(t)),
+                (Double t) -> (int) (250 * sin(t)));
     }
 
 
@@ -56,6 +61,7 @@ public class Canvas extends JFrame implements Runnable{
 
     @Override
     public void run() {
+        initializeEntities();
         int counter = 0;
         t = 0;
         while(true) {
