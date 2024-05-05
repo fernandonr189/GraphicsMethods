@@ -45,18 +45,29 @@ public class Canvas extends JFrame implements Runnable{
             backgroundGraphics.setColor(Color.black);
             backgroundGraphics.fillRect(0, 0, canvas.getHeight(), canvas.getWidth());
             backgroundPainted = true;
-            g.drawImage(canvas, 0, 0, panel);
         }
-        g.drawImage(canvas, 0, 0, panel);
-        circleBuffer.movement(t, 300, 300, getGraphics(), panel,
-                (Double t) -> (int) (250 * cos(t)),
-                (Double t) -> (int) (250 * sin(t)));
+        BufferedImage newBuffer = mergeBuffers();
+        g.drawImage(newBuffer, 0, 0, panel);
     }
 
 
     @Override
     public void update(Graphics g) {
         super.update(g);
+    }
+
+    private BufferedImage mergeBuffers() {
+        BufferedImage newImage = new BufferedImage(800, 800, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = newImage.createGraphics();
+
+        g2.drawImage(canvas, 0, 0, null);
+
+        circleBuffer.movement(t, 300, 300, g2,
+                (Double t) -> (int) (250 * cos(t)),
+                (Double t) -> (int) (250 * sin(t)));
+
+        g2.dispose();
+        return newImage;
     }
 
     @Override
@@ -67,7 +78,7 @@ public class Canvas extends JFrame implements Runnable{
         while(true) {
             try {
                 repaint();
-                Thread.sleep(8);
+                Thread.sleep(6);
                 t = (double) System.currentTimeMillis() / 1000;
                 counter++;
             } catch (InterruptedException e) {

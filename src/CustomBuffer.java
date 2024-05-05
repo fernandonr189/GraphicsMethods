@@ -141,11 +141,11 @@ public class CustomBuffer extends BufferedImage{
     }
 
     // this method must be called repeatedly in a period of time to create a movement
-    public void movement(double t, int x1, int y1, Graphics graphics, JPanel panel, Function<Double, Integer> xParam, Function<Double, Integer> yParam) {
+    public void movement(double t, int x1, int y1, Graphics graphics, Function<Double, Integer> xParam, Function<Double, Integer> yParam) {
         int x = xParam.apply(t) + x1;
         int y = yParam.apply(t) + y1;
 
-        if(!graphics.drawImage(this, x, y, panel)) {
+        if(!graphics.drawImage(this, x, y, null)) {
             System.out.println("Not drawn");
         }
     }
