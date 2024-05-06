@@ -33,7 +33,6 @@ public class CircleBuilder implements BuildMethods{
     public CustomBuffer scale(CustomBuffer buffer, double factor) {
         int newWidth = (int) floor(buffer.getWidth() * factor);
         int newHeight = (int) floor(buffer.getHeight() * factor);
-
         CustomBuffer newBuffer = new CustomBuffer(newWidth, newHeight, buffer.getType(), this);
         buffer = newBuffer;
         

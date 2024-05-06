@@ -17,9 +17,9 @@ public class Canvas extends JFrame implements Runnable{
     private double t;
 
     CircleBuilder circleBuilder = new CircleBuilder();
-    //SquareBuilder squareBuilder = new SquareBuilder();
+    SquareBuilder squareBuilder = new SquareBuilder();
     CustomBuffer circleBuffer = new CustomBuffer(200, 200, BufferedImage.TYPE_INT_ARGB, circleBuilder);
-    //CustomBuffer squareBuffer = new CustomBuffer(200, 200, BufferedImage.TYPE_INT_ARGB, squareBuilder);
+    CustomBuffer squareBuffer = new CustomBuffer(200, 200, BufferedImage.TYPE_INT_ARGB, squareBuilder);
 
     public Canvas(int width, int height) {
         canvas = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
@@ -39,7 +39,7 @@ public class Canvas extends JFrame implements Runnable{
 
     private void initializeEntities() {
         circleBuffer.build();
-        //squareBuffer.build();
+        squareBuffer.build();
     }
 
     @Override
@@ -71,7 +71,7 @@ public class Canvas extends JFrame implements Runnable{
 
         if(scale) {
             circleBuffer = circleBuffer.scale(0.98);
-            if(circleBuffer.getHeight() <= 10) {
+            if(circleBuffer.getHeight() <= 100) {
                 scale = false;
             }
         }
