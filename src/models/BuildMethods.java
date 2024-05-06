@@ -2,5 +2,6 @@ package models;
 
 public interface BuildMethods {
 
-    CustomBuffer build(CustomBuffer buffer);
+    void build(CustomBuffer buffer);
+    CustomBuffer scale(CustomBuffer buffer, double factor);
 }

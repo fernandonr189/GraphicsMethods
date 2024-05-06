@@ -17,9 +17,9 @@ public class Canvas extends JFrame implements Runnable{
     private double t;
 
     CircleBuilder circleBuilder = new CircleBuilder();
-    SquareBuilder squareBuilder = new SquareBuilder();
+    //SquareBuilder squareBuilder = new SquareBuilder();
     CustomBuffer circleBuffer = new CustomBuffer(200, 200, BufferedImage.TYPE_INT_ARGB, circleBuilder);
-    CustomBuffer squareBuffer = new CustomBuffer(200, 200, BufferedImage.TYPE_INT_ARGB, squareBuilder);
+    //CustomBuffer squareBuffer = new CustomBuffer(200, 200, BufferedImage.TYPE_INT_ARGB, squareBuilder);
 
     public Canvas(int width, int height) {
         canvas = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
@@ -39,7 +39,7 @@ public class Canvas extends JFrame implements Runnable{
 
     private void initializeEntities() {
         circleBuffer.build();
-        squareBuffer.build();
+        //squareBuffer.build();
     }
 
     @Override
@@ -61,23 +61,22 @@ public class Canvas extends JFrame implements Runnable{
         super.update(g);
     }
 
+    private boolean scaled = false;
+
     private BufferedImage mergeBuffers() {
         BufferedImage newImage = new BufferedImage(800, 800, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = newImage.createGraphics();
 
         g2.drawImage(canvas, 0, 0, null);
 
+        if(!scaled) {
+            circleBuffer = circleBuffer.scale(0.98);
+            scaled = false;
+        }
+
         circleBuffer.movement(t, 300, 300, g2,
                 (Double t) -> (int) (250 * cos(t * 2)),
-                (Double t) -> (int) (250 * sin(t * 10)));
-
-        squareBuffer.movement(t, 300, 300, g2,
-                (Double t) -> - (int) (250 * cos(t)),
-                (Double t) -> 255);
-
-        squareBuffer.movement(t, 300, 300, g2,
-                (Double t) -> 255,
-                (Double t) -> (int) (250 * sin(t * 4)));
+                (Double t) -> 0);
 
         g2.dispose();
         return newImage;
@@ -91,7 +90,7 @@ public class Canvas extends JFrame implements Runnable{
         while(true) {
             try {
                 repaint();
-                Thread.sleep(16);
+                Thread.sleep(6);
                 t = (double) System.currentTimeMillis() / 1000;
                 counter++;
             } catch (InterruptedException e) {
