@@ -151,8 +151,8 @@ public class CustomBuffer extends BufferedImage {
 
     // this method must be called repeatedly in a period of time to create a movement
     public void movement(double t, int x0, int y0, Graphics graphics, Function<Double, Integer> xParam, Function<Double, Integer> yParam) {
-        int x = xParam.apply(t) + x0;
-        int y = yParam.apply(t) + y0;
+        int x = xParam.apply(t) + x0 - this.getWidth() / 2;
+        int y = yParam.apply(t) + y0 - this.getHeight() / 2;
 
         if(!graphics.drawImage(this, x, y, null)) {
             System.out.println("Not drawn");

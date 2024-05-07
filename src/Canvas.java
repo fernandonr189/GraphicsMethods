@@ -39,7 +39,7 @@ public class Canvas extends JFrame implements Runnable{
 
     private void initializeEntities() {
         circleBuffer.build();
-        //squareBuffer.build();
+        squareBuffer.build();
     }
 
     @Override
@@ -71,20 +71,26 @@ public class Canvas extends JFrame implements Runnable{
 
         if(scale) {
             circleBuffer = circleBuffer.scale(0.98);
+            squareBuffer = squareBuffer.scale(0.98);
             if(circleBuffer.getHeight() <= 100) {
                 scale = false;
             }
         }
         else {
             circleBuffer = circleBuffer.scale(1.02);
+            squareBuffer = squareBuffer.scale(1.02);
             if(circleBuffer.getHeight() >= 200) {
                 scale = true;
             }
         }
 
-        circleBuffer.movement(t, 300, 300, g2,
-                (Double t) -> 0,
-                (Double t) -> 0);
+        squareBuffer.movement(t, 400, 400, g2,
+                (Double t) -> - (int) (300 * cos(t)),
+                (Double t) -> (int) (300 * sin(t)));
+        circleBuffer.movement(t, 400, 400, g2,
+                (Double t) -> (int) (300 * cos(t)),
+                (Double t) -> (int) (300 * sin(t)));
+
 
         g2.dispose();
         return newImage;
@@ -98,7 +104,7 @@ public class Canvas extends JFrame implements Runnable{
         while(true) {
             try {
                 repaint();
-                Thread.sleep(6);
+                Thread.sleep(16);
                 t = (double) System.currentTimeMillis() / 1000;
                 counter++;
             } catch (InterruptedException e) {
