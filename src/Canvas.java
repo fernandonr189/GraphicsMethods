@@ -61,7 +61,7 @@ public class Canvas extends JFrame implements Runnable{
         super.update(g);
     }
 
-    private boolean scale = false;
+    private boolean scale = true;
 
     private BufferedImage mergeBuffers() {
         BufferedImage newImage = new BufferedImage(800, 800, BufferedImage.TYPE_INT_ARGB);
@@ -69,19 +69,13 @@ public class Canvas extends JFrame implements Runnable{
 
         g2.drawImage(canvas, 0, 0, null);
 
-        if(scale) {
-            circleBuffer = circleBuffer.scale(0.98);
-            squareBuffer = squareBuffer.scale(0.98);
-            if(circleBuffer.getHeight() <= 100) {
-                scale = false;
-            }
+
+        if(!squareBuffer.isScaling() && scale) {
+            squareBuffer.setScaling(100, t + 1.0);
+            scale = false;
         }
         else {
-            circleBuffer = circleBuffer.scale(1.02);
-            squareBuffer = squareBuffer.scale(1.02);
-            if(circleBuffer.getHeight() >= 200) {
-                scale = true;
-            }
+            squareBuffer = squareBuffer.scale(t);
         }
 
         squareBuffer.movement(t, 400, 400, g2,
@@ -100,7 +94,7 @@ public class Canvas extends JFrame implements Runnable{
     public void run() {
         initializeEntities();
         int counter = 0;
-        t = 0;
+        t = (double) System.currentTimeMillis() / 1000;
         while(true) {
             try {
                 repaint();

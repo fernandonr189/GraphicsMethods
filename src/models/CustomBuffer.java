@@ -12,6 +12,13 @@ public class CustomBuffer extends BufferedImage {
 
     private BuildMethods builder;
 
+
+    private double targetSize;
+    private double targetTime;
+    private double originalSize;
+    private double originalTime;
+    private boolean isScaling = false;
+
     public CustomBuffer(int width, int height, int imageType, BuildMethods builder) {
         super(width, height, imageType);
         this.builder = builder;
@@ -74,7 +81,6 @@ public class CustomBuffer extends BufferedImage {
         int p;
         int incX = 1;
         int incY = 1;
-        double m = (double) dy / dx;
 
         if (dy < 0){
             dy = -dy;
@@ -145,8 +151,48 @@ public class CustomBuffer extends BufferedImage {
         }
     }
 
-    public CustomBuffer scale(double factor) {
-        return builder.scale(this, factor);
+    public boolean isScaling() {
+        return this.isScaling;
+    }
+
+    public void setScaling(int targetSize, double targetTime) {
+        this.isScaling = true;
+        this.targetSize = targetSize;
+        this.targetTime = targetTime;
+        this.originalSize = (double) this.getWidth();
+        this.originalTime = (double) System.currentTimeMillis() / 1000;
+    }
+
+    public void resumeScaling(double targetSize, double targetTime, double originalSize, double originalTime) {
+        this.isScaling = true;
+        this.targetSize = targetSize;
+        this.targetTime = targetTime;
+        this.originalSize = originalSize;
+        this.originalTime = originalTime;
+    }
+
+    public CustomBuffer scale(double t) {
+        if(isScaling) {
+
+            double m = (targetSize - originalSize) / (targetTime - originalTime);
+            double b = originalSize - (m * originalTime);
+            double newSize = m * (t) + b;
+            double factor = newSize / originalSize;
+
+            if(factor > 1.0 && (int) floor(newSize) >= targetSize) {
+                this.isScaling = false;
+                return this;
+            }
+            if(factor < 1.0 && (int) floor(newSize) <= targetSize) {
+                this.isScaling = false;
+                return this;
+            }
+
+            CustomBuffer scaledBuffer = builder.scale(this, factor);
+            scaledBuffer.resumeScaling(targetSize, targetTime, originalSize, originalTime);
+            return scaledBuffer;
+        }
+        return this;
     }
 
     // this method must be called repeatedly in a period of time to create a movement
