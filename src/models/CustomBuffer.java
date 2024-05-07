@@ -33,11 +33,11 @@ public class CustomBuffer extends BufferedImage {
         while(!queue.isEmpty()) {
             Point p = queue.poll();
 
-            if(this.getRGB(p.getX(), p.getY()) != targetColor) {
+            if(this.getRGB((int) p.getX(),(int) p.getY()) != targetColor) {
                 continue;
             }
 
-            this.setRGB(p.getX(), p.getY(), a.getRGB());
+            this.setRGB((int) p.getX(),(int) p.getY(), a.getRGB());
             queue.add(new Point(p.getX() - 1, p.getY()));
             queue.add(new Point(p.getX() + 1, p.getY()));
             queue.add(new Point(p.getY(), p.getX() - 1));

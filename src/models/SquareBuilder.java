@@ -21,11 +21,34 @@ public class SquareBuilder implements BuildMethods{
             isInitialized = true;
         }
 
-        buffer.BresenhamLine(points[0].getX(), points[0].getY(), points[1].getX(), points[1].getY(), Color.red);
-        buffer.BresenhamLine(points[1].getX(), points[1].getY(), points[2].getX(), points[2].getY(), Color.red);
-        buffer.BresenhamLine(points[2].getX(),points[2].getY(), points[3].getX(), points[3].getY(), Color.red);
-        buffer.BresenhamLine(points[3].getX(),points[3].getY(), points[0].getX(), points[0].getX(), Color.red);
-        buffer.floodFill(points[4].getX(), points[4].getY(), Color.red);
+        buffer.BresenhamLine(
+                (int) floor(points[0].getX()),
+                (int) floor(points[0].getY()),
+                (int) floor(points[1].getX()),
+                (int) floor(points[1].getY()),
+                Color.red);
+        buffer.BresenhamLine(
+                (int) floor(points[1].getX()),
+                (int) floor(points[1].getY()),
+                (int) floor(points[2].getX()),
+                (int) floor(points[2].getY()),
+                Color.red);
+        buffer.BresenhamLine(
+                (int) floor(points[2].getX()),
+                (int) floor(points[2].getY()),
+                (int) floor(points[3].getX()),
+                (int) floor(points[3].getY()),
+                Color.red);
+        buffer.BresenhamLine(
+                (int) floor(points[3].getX()),
+                (int) floor(points[3].getY()),
+                (int) floor(points[0].getX()),
+                (int) floor(points[0].getY()),
+                Color.red);
+        buffer.floodFill(
+                (int) floor(points[4].getX()),
+                (int) floor(points[4].getY()),
+                Color.red);
     }
 
     @Override
@@ -37,8 +60,8 @@ public class SquareBuilder implements BuildMethods{
         
         for(int i = 0; i < points.length; i++) {
             points[i] = new Point(
-                (int) floor(points[i].getX() * factor),
-                (int) floor(points[i].getY() * factor));
+                points[i].getX() * factor,
+                points[i].getY() * factor);
         }
         
         build(buffer);

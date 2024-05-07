@@ -39,7 +39,7 @@ public class Canvas extends JFrame implements Runnable{
 
     private void initializeEntities() {
         circleBuffer.build();
-        squareBuffer.build();
+        //squareBuffer.build();
     }
 
     @Override

@@ -7,12 +7,16 @@ import static java.lang.Math.*;
 public class CircleBuilder implements BuildMethods{
 
     private Point[] points;
-    private int radius;
+    private double radius;
     private boolean isInitialized = false;
+    private double height;
+    private double width;
 
     @Override
     public void build(CustomBuffer buffer) {
         if(!isInitialized) {
+            height = buffer.getHeight();
+            width = buffer.getWidth();
             points = new Point[5];
             points[0] = new Point(100, 100);
             points[1] = new Point(20, 20);
@@ -23,26 +27,44 @@ public class CircleBuilder implements BuildMethods{
             isInitialized = true;
         }
 
-        buffer.basicCircle(points[0].getX(), points[0].getY(), radius, Color.blue);
-        buffer.floodFill(points[0].getX(), points[0].getY(), Color.blue);
-        buffer.DDALine(points[1].getX(), points[1].getY(), points[2].getX(), points[2].getY(), Color.blue);
-        buffer.DDALine(points[3].getX(), points[3].getY(), points[4].getX(), points[4].getY(), Color.blue);
+        buffer.basicCircle(
+                (int) floor(points[0].getX()),
+                (int) floor(points[0].getY()),
+                (int) floor(radius), Color.blue);
+
+        buffer.floodFill(
+                (int) floor(points[0].getX()),
+                (int) floor(points[0].getY()),
+                Color.blue);
+
+        buffer.DDALine(
+                (int) floor(points[1].getX()),
+                (int) floor(points[1].getY()),
+                (int) floor(points[2].getX()),
+                (int) floor(points[2].getY()),
+                Color.blue);
+
+        buffer.DDALine(
+                (int) floor(points[3].getX()),
+                (int) floor(points[3].getY()),
+                (int) floor(points[4].getX()),
+                (int) floor(points[4].getY()),
+                Color.blue);
     }
 
     @Override
     public CustomBuffer scale(CustomBuffer buffer, double factor) {
-        int newWidth = (int) floor(buffer.getWidth() * factor);
-        int newHeight = (int) floor(buffer.getHeight() * factor);
-        CustomBuffer newBuffer = new CustomBuffer(newWidth, newHeight, buffer.getType(), this);
-        buffer = newBuffer;
+        width = width * factor;
+        height = height * factor;
+        buffer = new CustomBuffer((int) floor(width), (int) floor(height), buffer.getType(), this);
         
         for(int i = 0; i < points.length; i++) {
             points[i] = new Point(
-                (int) floor(points[i].getX() * factor),
-                (int) floor(points[i].getY() * factor));
+                points[i].getX() * factor,
+                points[i].getY() * factor);
         }
 
-        radius = (int) floor(radius * factor);
+        radius = radius * factor;
 
         build(buffer);
         return buffer;
