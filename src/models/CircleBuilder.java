@@ -69,4 +69,41 @@ public class CircleBuilder implements BuildMethods{
         build(buffer);
         return buffer;
     }
+
+
+    @Override
+    public CustomBuffer rotate(CustomBuffer buffer, double angle) { 
+        double[] center = {
+            (double) buffer.getWidth() / 2,
+            (double) buffer.getHeight() / 2
+        };
+
+        double highestX = buffer.getWidth();
+        double highestY = buffer.getHeight();
+
+        for(int i = 0; i < points.length; i++) {
+            double dx = points[i].getX() - center[0];
+            double dy = points[i].getY() - center[1];
+            double b = sqrt(pow(dx, 2) + pow(dy, 2));
+            double originalAngle = atan2(dy, dx);
+            double newAngle = originalAngle + angle;
+            double newX = b * cos(newAngle) + center[0];
+            double newY = b * sin(newAngle) + center[1];
+
+            if(newX > highestX) {
+                highestX = newX;
+            }
+
+            if(newY > highestY) {
+                highestY = newY;
+            }
+
+            points[i] = new Point(newX, newY);
+        }
+
+        buffer = new CustomBuffer((int) floor(highestX), (int) floor(highestY), buffer.getType(), this);
+
+        build(buffer);
+        return buffer;
+    }
 }

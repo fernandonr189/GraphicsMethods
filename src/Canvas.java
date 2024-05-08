@@ -74,27 +74,31 @@ public class Canvas extends JFrame implements Runnable{
 
 
         if(squareBuffer.isScaling()) {
-            squareBuffer = squareBuffer.scale(t);
+            //squareBuffer = squareBuffer.scale(t);
         }
         else {
             if(isSquareGrowing) {
+                squareBuffer = squareBuffer.rotate(Math.PI / 4);
                 squareBuffer.setScaling(350, t + 1.0);
             }
             else {
+                squareBuffer = squareBuffer.rotate(Math.PI / 4);
                 squareBuffer.setScaling(50, t + 1.0);
             }
             isSquareGrowing = !isSquareGrowing;
         }
 
         if(circleBuffer.isScaling()) {
-            circleBuffer = circleBuffer.scale(t);
+            //circleBuffer = circleBuffer.scale(t);
         }
         else {
             if(isCircleGrowing) {
                 circleBuffer.setScaling(450, t + 1.0);
+                circleBuffer = circleBuffer.rotate(Math.PI / 4);
             }
             else {
                 circleBuffer.setScaling(50, t + 1.0);
+                circleBuffer = circleBuffer.rotate(Math.PI / 4);
             }
             isCircleGrowing = !isCircleGrowing;
         }
