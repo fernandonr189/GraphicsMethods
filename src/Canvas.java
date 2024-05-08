@@ -22,6 +22,7 @@ public class Canvas extends JFrame implements Runnable{
     CustomBuffer squareBuffer = new CustomBuffer(200, 200, BufferedImage.TYPE_INT_ARGB, squareBuilder);
 
     public Canvas(int width, int height) {
+        t = (double) System.currentTimeMillis() / 1000;
         canvas = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         setTitle("Metodos");
         setSize(width, height);
@@ -61,7 +62,9 @@ public class Canvas extends JFrame implements Runnable{
         super.update(g);
     }
 
-    private boolean scale = true;
+
+
+    private boolean scaling = false;
 
     private BufferedImage mergeBuffers() {
         BufferedImage newImage = new BufferedImage(800, 800, BufferedImage.TYPE_INT_ARGB);
@@ -70,20 +73,27 @@ public class Canvas extends JFrame implements Runnable{
         g2.drawImage(canvas, 0, 0, null);
 
 
-        if(!squareBuffer.isScaling() && scale) {
-            squareBuffer.setScaling(100, t + 1.0);
-            scale = false;
+        if(!squareBuffer.isScaling()) {
+            //squareBuffer.setScaling(100, t + 1.0);
         }
         else {
-            squareBuffer = squareBuffer.scale(t);
+            //squareBuffer = squareBuffer.scale(t);
+        }
+
+        if(!circleBuffer.isScaling() && !scaling) {
+            circleBuffer.setScaling(250, t + 1.0);
+            scaling = true;
+        }
+        else {
+            circleBuffer = circleBuffer.scale(t);
         }
 
         squareBuffer.movement(t, 400, 400, g2,
                 (Double t) -> - (int) (300 * cos(t)),
                 (Double t) -> (int) (300 * sin(t)));
         circleBuffer.movement(t, 400, 400, g2,
-                (Double t) -> (int) (300 * cos(t)),
-                (Double t) -> (int) (300 * sin(t)));
+                (Double t) -> (int) (200 * cos(t)),
+                (Double t) -> (int) (200 * sin(t)));
 
 
         g2.dispose();
@@ -94,11 +104,10 @@ public class Canvas extends JFrame implements Runnable{
     public void run() {
         initializeEntities();
         int counter = 0;
-        t = (double) System.currentTimeMillis() / 1000;
         while(true) {
             try {
                 repaint();
-                Thread.sleep(16);
+                Thread.sleep(6);
                 t = (double) System.currentTimeMillis() / 1000;
                 counter++;
             } catch (InterruptedException e) {

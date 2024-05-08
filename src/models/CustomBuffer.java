@@ -18,6 +18,7 @@ public class CustomBuffer extends BufferedImage {
     private double originalSize;
     private double originalTime;
     private boolean isScaling = false;
+    private boolean isGrowing = false;
 
     public CustomBuffer(int width, int height, int imageType, BuildMethods builder) {
         super(width, height, imageType);
@@ -156,11 +157,13 @@ public class CustomBuffer extends BufferedImage {
     }
 
     public void setScaling(int targetSize, double targetTime) {
+        isGrowing = targetSize > originalSize;
         this.isScaling = true;
         this.targetSize = targetSize;
         this.targetTime = targetTime;
         this.originalSize = (double) this.getWidth();
         this.originalTime = (double) System.currentTimeMillis() / 1000;
+
     }
 
     public void resumeScaling(double targetSize, double targetTime, double originalSize, double originalTime) {
@@ -169,6 +172,7 @@ public class CustomBuffer extends BufferedImage {
         this.targetTime = targetTime;
         this.originalSize = originalSize;
         this.originalTime = originalTime;
+        isGrowing = targetSize > originalSize;
     }
 
     public CustomBuffer scale(double t) {
@@ -177,13 +181,13 @@ public class CustomBuffer extends BufferedImage {
             double m = (targetSize - originalSize) / (targetTime - originalTime);
             double b = originalSize - (m * originalTime);
             double newSize = m * (t) + b;
-            double factor = newSize / originalSize;
+            double factor = newSize / (double) this.getWidth();
 
-            if(factor > 1.0 && (int) floor(newSize) >= targetSize) {
+            if(isGrowing && (int) floor(newSize) >= targetSize) {
                 this.isScaling = false;
                 return this;
             }
-            if(factor < 1.0 && (int) floor(newSize) <= targetSize) {
+            if(!isGrowing && (int) floor(newSize) <= targetSize) {
                 this.isScaling = false;
                 return this;
             }
