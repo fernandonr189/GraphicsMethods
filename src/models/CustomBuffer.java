@@ -10,7 +10,7 @@ import static java.lang.Math.*;
 
 public class CustomBuffer extends BufferedImage {
 
-    private BuildMethods builder;
+    private final BuildMethods builder;
 
 
     private double targetSize;

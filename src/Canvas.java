@@ -73,7 +73,10 @@ public class Canvas extends JFrame implements Runnable{
         g2.drawImage(canvas, 0, 0, null);
 
 
-        if(!squareBuffer.isScaling()) {
+        if(squareBuffer.isScaling()) {
+            squareBuffer = squareBuffer.scale(t);
+        }
+        else {
             if(isSquareGrowing) {
                 squareBuffer.setScaling(350, t + 1.0);
             }
@@ -82,11 +85,11 @@ public class Canvas extends JFrame implements Runnable{
             }
             isSquareGrowing = !isSquareGrowing;
         }
-        else {
-            squareBuffer = squareBuffer.scale(t);
-        }
 
-        if(!circleBuffer.isScaling()) {
+        if(circleBuffer.isScaling()) {
+            circleBuffer = circleBuffer.scale(t);
+        }
+        else {
             if(isCircleGrowing) {
                 circleBuffer.setScaling(450, t + 1.0);
             }
@@ -94,9 +97,6 @@ public class Canvas extends JFrame implements Runnable{
                 circleBuffer.setScaling(50, t + 1.0);
             }
             isCircleGrowing = !isCircleGrowing;
-        }
-        else {
-            circleBuffer = circleBuffer.scale(t);
         }
 
         squareBuffer.movement(t, 400, 400, g2,
