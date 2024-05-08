@@ -157,12 +157,12 @@ public class CustomBuffer extends BufferedImage {
     }
 
     public void setScaling(int targetSize, double targetTime) {
-        isGrowing = targetSize > originalSize;
         this.isScaling = true;
         this.targetSize = targetSize;
         this.targetTime = targetTime;
         this.originalSize = (double) this.getWidth();
         this.originalTime = (double) System.currentTimeMillis() / 1000;
+        isGrowing = targetSize > originalSize;
 
     }
 
@@ -183,6 +183,7 @@ public class CustomBuffer extends BufferedImage {
             double newSize = m * (t) + b;
             double factor = newSize / (double) this.getWidth();
 
+            //System.out.println("target: " + targetSize + " new: " + newSize);
             if(isGrowing && (int) floor(newSize) >= targetSize) {
                 this.isScaling = false;
                 return this;
