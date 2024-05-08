@@ -81,6 +81,9 @@ public class SquareBuilder implements BuildMethods{
         double highestX = buffer.getWidth();
         double highestY = buffer.getHeight();
 
+        double lowestY = 0;
+        double lowestX = 0;
+
         for(int i = 0; i < points.length; i++) {
             double dx = points[i].getX() - center[0];
             double dy = points[i].getY() - center[1];
@@ -98,7 +101,26 @@ public class SquareBuilder implements BuildMethods{
                 highestY = newY;
             }
 
+            if(newX < lowestX) {
+                lowestX = newX;
+            }
+
+            if(newY < lowestY) {
+                lowestY = newY;
+            }
+
             points[i] = new Point(newX, newY);
+        }
+
+        if(lowestX < 0) {
+            for(int i = 0; i < points.length; i++) {
+                points[i] = new Point(points[i].getX() + ceil(abs(lowestX)), points[i].getY());
+            }
+        }
+        if(lowestY < 0) {
+            for(int i = 0; i < points.length; i++) {
+                points[i] = new Point(points[i].getX(), points[i].getY() + ceil(abs(lowestY)));
+            }
         }
 
         buffer = new CustomBuffer((int) floor(highestX) + 5, (int) floor(highestY) + 5, buffer.getType(), this);
