@@ -214,6 +214,12 @@ public class CustomBuffer extends BufferedImage {
         }
     }
 
+    public void draw(int x, int y, Graphics graphics) {
+        if(!graphics.drawImage(this, x - this.getWidth() / 2, y - this.getHeight() / 2, null)) {
+            System.out.println("Not drawn");
+        }
+    }
+
     public void pixel(int x, int y, Color a, int alpha) {
         this.setRGB(x, y, new Color(a.getRed(), a.getGreen(), a.getBlue(), alpha).getRGB());
     }

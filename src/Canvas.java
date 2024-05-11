@@ -16,13 +16,15 @@ public class Canvas extends JFrame implements Runnable{
     private boolean backgroundPainted = false;
     private double t;
 
+    private double initialTime =  (double) System.currentTimeMillis() / 1000;
+
     CircleBuilder circleBuilder = new CircleBuilder();
     SquareBuilder squareBuilder = new SquareBuilder();
     CustomBuffer circleBuffer = new CustomBuffer(200, 200, BufferedImage.TYPE_INT_ARGB, circleBuilder);
     CustomBuffer squareBuffer = new CustomBuffer(200, 200, BufferedImage.TYPE_INT_ARGB, squareBuilder);
 
     public Canvas(int width, int height) {
-        t = (double) System.currentTimeMillis() / 1000;
+        t = (double) (System.currentTimeMillis() / 1000) - initialTime;
         canvas = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         setTitle("Metodos");
         setSize(width, height);
@@ -63,9 +65,6 @@ public class Canvas extends JFrame implements Runnable{
     }
 
 
-    private boolean isCircleGrowing = false;
-    private boolean isSquareGrowing = true;
-
     private BufferedImage mergeBuffers() {
         BufferedImage newImage = new BufferedImage(800, 800, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = newImage.createGraphics();
@@ -73,42 +72,7 @@ public class Canvas extends JFrame implements Runnable{
         g2.drawImage(canvas, 0, 0, null);
 
 
-        if(squareBuffer.isScaling()) {
-            //squareBuffer = squareBuffer.scale(t);
-        }
-        else {
-            if(isSquareGrowing) {
-                squareBuffer = squareBuffer.rotate(Math.PI / 4);
-                squareBuffer.setScaling(350, t + 1.0);
-            }
-            else {
-                squareBuffer = squareBuffer.rotate(Math.PI / 4);
-                squareBuffer.setScaling(50, t + 1.0);
-            }
-            isSquareGrowing = !isSquareGrowing;
-        }
-
-        if(circleBuffer.isScaling()) {
-            //circleBuffer = circleBuffer.scale(t);
-        }
-        else {
-            if(isCircleGrowing) {
-                circleBuffer.setScaling(450, t + 1.0);
-                circleBuffer = circleBuffer.rotate(Math.PI / 4);
-            }
-            else {
-                circleBuffer.setScaling(50, t + 1.0);
-                circleBuffer = circleBuffer.rotate(Math.PI / 4);
-            }
-            isCircleGrowing = !isCircleGrowing;
-        }
-
-        squareBuffer.movement(t, 400, 400, g2,
-                (Double t) -> - (int) (300 * cos(t)),
-                (Double t) -> (int) (300 * sin(t)));
-        circleBuffer.movement(t, 400, 400, g2,
-                (Double t) -> (int) (200 * cos(t)),
-                (Double t) -> (int) (200 * sin(t)));
+        squareBuffer.draw(400, 400, g2);
 
 
         g2.dispose();
@@ -119,11 +83,18 @@ public class Canvas extends JFrame implements Runnable{
     public void run() {
         initializeEntities();
         int counter = 0;
+        int seconds = (int) floor(t);
         while(true) {
             try {
                 repaint();
-                Thread.sleep(6);
-                t = (double) System.currentTimeMillis() / 1000;
+                Thread.sleep(16);
+                t = (double) System.currentTimeMillis() / 1000 - initialTime;
+                if((int) floor(t) > seconds) {
+                    seconds = (int) floor(t);
+                    if(seconds > 0) {
+                        System.out.println(seconds + "s: " + counter + " frames -> " + (counter / seconds) + " fps");
+                    }
+                }
                 counter++;
             } catch (InterruptedException e) {
                 System.out.println("Frame: " + counter + " -> " + e);
