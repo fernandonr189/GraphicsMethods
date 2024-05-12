@@ -67,7 +67,7 @@ public class Canvas extends JFrame implements Runnable{
 
 
 
-    private int turns = 0;
+    private boolean isGrowing = true;
 
     private BufferedImage mergeBuffers() {
         BufferedImage newImage = new BufferedImage(800, 800, BufferedImage.TYPE_INT_ARGB);
@@ -76,13 +76,26 @@ public class Canvas extends JFrame implements Runnable{
         g2.drawImage(canvas, 0, 0, null);
         //squareBuffer.draw(400, 400, g2);
 
-        if(!circleBuffer.isRotating() && turns <= 3) {
-            circleBuffer.setRotating(2 * PI, t + 2.0, t);
-            turns++;
+        if(circleBuffer.isScaling()) {
+            circleBuffer = circleBuffer.scale(t);
         }
         else {
+            if(isGrowing) {
+                circleBuffer.setScaling(350, t, 1.0);
+            }
+            else {
+                circleBuffer.setScaling(50, t, 1.0);
+            }
+            isGrowing = !isGrowing;
+        }
+
+        if(circleBuffer.isRotating()) {
             circleBuffer = circleBuffer.rotate(t);
         }
+        else {
+            circleBuffer.setRotating(2 * PI, t, 2.0);
+        }
+
 
         circleBuffer.movement(t, 400, 400, g2,
                 (Double t) -> - (int) (300 * cos(t)),
@@ -104,7 +117,7 @@ public class Canvas extends JFrame implements Runnable{
                 if((int) floor(t) > seconds) {
                     seconds = (int) floor(t);
                     if(seconds > 0) {
-                        System.out.println(seconds + "s: " + counter + " frames -> " + (counter / seconds) + " fps");
+                        System.out.println(seconds + "s: " + counter + " frames -> " + (counter / seconds) + " fps " + "rebuilds: " + circleBuilder.rebuildCount / seconds);
                     }
                 }
                 counter++;

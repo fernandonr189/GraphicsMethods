@@ -169,12 +169,12 @@ public class CustomBuffer extends BufferedImage {
         return this.isRotating;
     }
 
-    public void setScaling(int targetSize, double targetTime, double initialTime) {
+    public void setScaling(int targetSize, double initialTime, double timeDelta) {
         this.isScaling = true;
         this.targetSize = targetSize;
-        this.targetTime = targetTime;
+        this.targetTime = initialTime + timeDelta;
         this.originalSize = this.getWidth();
-        this.originalTime = ((double) System.currentTimeMillis() / 1000) - initialTime;
+        this.originalTime = initialTime;
         isGrowing = targetSize > originalSize;
     }
 
@@ -213,10 +213,10 @@ public class CustomBuffer extends BufferedImage {
         return this;
     }
 
-    public void setRotating(double targetAngle, double targetTime, double initialTime) {
+    public void setRotating(double targetAngle, double initialTime, double timeDelta) {
         this.isRotating = true;
         this.targetAngle = targetAngle;
-        this.targetTimeRotation = targetTime;
+        this.targetTimeRotation = initialTime + timeDelta;
         this.previousAngle = 0;
         this.originalTimeRotation = initialTime;
     }

@@ -16,8 +16,11 @@ public class CircleBuilder implements BuildMethods {
     private double height;
     private double width;
 
+    public int rebuildCount = 0;
+
     @Override
     public void build(CustomBuffer buffer) {
+        rebuildCount++;
         if(!isInitialized) {
             height = buffer.getHeight();
             width = buffer.getWidth();
