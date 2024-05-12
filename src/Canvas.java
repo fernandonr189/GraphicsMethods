@@ -15,8 +15,9 @@ public class Canvas extends JFrame implements Runnable{
     private final JPanel panel;
     private boolean backgroundPainted = false;
     private double t;
+    private int seconds;
 
-    private double initialTime =  (double) System.currentTimeMillis() / 1000;
+    private final double initialTime =  (double) System.currentTimeMillis() / 1000;
 
     CircleBuilder circleBuilder = new CircleBuilder();
     SquareBuilder squareBuilder = new SquareBuilder();
@@ -65,6 +66,8 @@ public class Canvas extends JFrame implements Runnable{
     }
 
 
+    private boolean latch = false;
+
     private BufferedImage mergeBuffers() {
         BufferedImage newImage = new BufferedImage(800, 800, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = newImage.createGraphics();
@@ -75,6 +78,15 @@ public class Canvas extends JFrame implements Runnable{
         squareBuffer.draw(400, 400, g2);
 
 
+        if(seconds % 5 == 0 && !latch) {
+            latch = true;
+            System.out.println("Rotate method called");
+            squareBuffer.rotate(PI / 4);
+        }
+        else if (seconds % 2 == 0 && seconds % 10 != 0) {
+            latch = false;
+        }
+
         g2.dispose();
         return newImage;
     }
@@ -83,11 +95,11 @@ public class Canvas extends JFrame implements Runnable{
     public void run() {
         initializeEntities();
         int counter = 0;
-        int seconds = (int) floor(t);
+        seconds = (int) floor(t);
         while(true) {
             try {
                 repaint();
-                Thread.sleep(16);
+                Thread.sleep(6);
                 t = (double) System.currentTimeMillis() / 1000 - initialTime;
                 if((int) floor(t) > seconds) {
                     seconds = (int) floor(t);
