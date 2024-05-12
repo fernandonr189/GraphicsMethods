@@ -160,7 +160,7 @@ public class CustomBuffer extends BufferedImage {
         this.isScaling = true;
         this.targetSize = targetSize;
         this.targetTime = targetTime;
-        this.originalSize = (double) this.getWidth();
+        this.originalSize = this.getWidth();
         this.originalTime = (double) System.currentTimeMillis() / 1000;
         isGrowing = targetSize > originalSize;
 

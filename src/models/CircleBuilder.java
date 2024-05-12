@@ -72,36 +72,51 @@ public class CircleBuilder implements BuildMethods{
 
 
     @Override
-    public CustomBuffer rotate(CustomBuffer buffer, double angle) { 
+    public CustomBuffer rotate(CustomBuffer buffer, double angle) {
         double[] center = {
-            (double) buffer.getWidth() / 2,
-            (double) buffer.getHeight() / 2
+                (double) buffer.getWidth() / 2,
+                (double) buffer.getHeight() / 2
         };
 
-        double highestX = buffer.getWidth();
-        double highestY = buffer.getHeight();
+        double lowestX = buffer.getWidth();
+        double lowestY = buffer.getHeight();
+        double highestX = 0;
+        double highestY = 0;
 
         for(int i = 0; i < points.length; i++) {
             double dx = points[i].getX() - center[0];
             double dy = points[i].getY() - center[1];
             double b = sqrt(pow(dx, 2) + pow(dy, 2));
             double originalAngle = atan2(dy, dx);
-            double newAngle = originalAngle + angle;
+            double newAngle = originalAngle - angle;
             double newX = b * cos(newAngle) + center[0];
             double newY = b * sin(newAngle) + center[1];
+            points[i] = new Point(newX, newY);
 
-            if(newX > highestX) {
-                highestX = newX;
+            if(points[i].getX() > highestX) {
+                highestX = points[i].getX();
             }
-
-            if(newY > highestY) {
-                highestY = newY;
+            if(points[i].getY() > highestY) {
+                highestY = points[i].getY();
             }
+            if(points[i].getX() < lowestX) {
+                lowestX = points[i].getX();
+            }
+            if(points[i].getY() < lowestY) {
+                lowestY = points[i].getY();
+            }
+        }
 
+        for(int i = 0; i < points.length; i++) {
+            double newX = points[i].getX() - lowestX + 20;
+            double newY = points[i].getY() - lowestY + 20;
             points[i] = new Point(newX, newY);
         }
 
-        buffer = new CustomBuffer((int) floor(highestX), (int) floor(highestY), buffer.getType(), this);
+        int bufferWidth = (int) floor(highestX - lowestX) + 40;
+        int bufferHeight = (int) floor(highestY - lowestY) + 40;
+
+        buffer = new CustomBuffer(bufferWidth, bufferHeight, buffer.getType(), this);
 
         build(buffer);
         return buffer;

@@ -37,7 +37,7 @@ public class Canvas extends JFrame implements Runnable{
 
 
         setVisible(true);
-
+        initializeEntities();
         new Thread(this).start();
     }
 
@@ -75,13 +75,13 @@ public class Canvas extends JFrame implements Runnable{
         g2.drawImage(canvas, 0, 0, null);
 
 
-        squareBuffer.draw(400, 400, g2);
+        circleBuffer.draw(400, 400, g2);
 
 
-        if(seconds % 5 == 0 && !latch) {
+        if(seconds % 5 == 0 && !latch && seconds > 0) {
             latch = true;
             System.out.println("Rotate method called");
-            squareBuffer = squareBuffer.rotate(PI / 4);
+            circleBuffer = circleBuffer.rotate(PI / 4);
         }
         else if (seconds % 2 == 0 && seconds % 10 != 0) {
             latch = false;
@@ -93,7 +93,6 @@ public class Canvas extends JFrame implements Runnable{
 
     @Override
     public void run() {
-        initializeEntities();
         int counter = 0;
         seconds = (int) floor(t);
         while(true) {
