@@ -81,7 +81,7 @@ public class Canvas extends JFrame implements Runnable{
         if(seconds % 5 == 0 && !latch && seconds > 0) {
             latch = true;
             System.out.println("Rotate method called");
-            squareBuffer = squareBuffer.rotate(PI / 4);
+            squareBuffer = squareBuffer.rotate(PI / 8);
         }
         else if (seconds % 2 == 0 && seconds % 10 != 0) {
             latch = false;

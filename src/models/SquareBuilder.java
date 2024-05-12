@@ -49,6 +49,10 @@ public class SquareBuilder implements BuildMethods{
                 (int) floor(points[0].getX()),
                 (int) floor(points[0].getY()),
                 Color.red);
+        buffer.floodFill(
+                (int) floor(points[4].getX()),
+                (int) floor(points[4].getY()),
+                Color.red);
     }
 
     @Override
