@@ -218,7 +218,7 @@ public class CustomBuffer extends BufferedImage {
         this.targetAngle = targetAngle;
         this.targetTimeRotation = targetTime;
         this.previousAngle = 0;
-        this.originalTimeRotation = ((double) System.currentTimeMillis() / 1000) - initialTime;
+        this.originalTimeRotation = initialTime;
     }
 
     private void resumeRotation(double targetAngle, double targetTime, double originalTime, double previousAngle) {

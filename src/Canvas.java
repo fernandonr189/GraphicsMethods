@@ -75,7 +75,7 @@ public class Canvas extends JFrame implements Runnable{
         //squareBuffer.draw(400, 400, g2);
 
         if(!circleBuffer.isRotating()) {
-            circleBuffer.setRotating(2 * PI, t + 2.0, initialTime);
+            circleBuffer.setRotating(2 * PI, t + 2.0, t);
         }
         else {
             circleBuffer = circleBuffer.rotate(t);
