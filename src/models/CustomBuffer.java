@@ -234,7 +234,13 @@ public class CustomBuffer extends BufferedImage {
         if(isRotating) {
             double m = (targetAngle - originalAngle) / (targetTimeRotation - originalTimeRotation);
             double newAngle = m * t;
+
+            if(newAngle > targetAngle) {
+                newAngle = targetAngle;
+            }
+
             double angleDelta = newAngle - previousAngle;
+
 
             if (newAngle == targetAngle) {
                 isRotating = false;

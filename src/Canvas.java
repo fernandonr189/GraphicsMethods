@@ -66,6 +66,7 @@ public class Canvas extends JFrame implements Runnable{
     }
 
 
+    private boolean rotated = false;
 
     private BufferedImage mergeBuffers() {
         BufferedImage newImage = new BufferedImage(800, 800, BufferedImage.TYPE_INT_ARGB);
@@ -74,8 +75,9 @@ public class Canvas extends JFrame implements Runnable{
         g2.drawImage(canvas, 0, 0, null);
         squareBuffer.draw(400, 400, g2);
 
-        if(!squareBuffer.isRotating()) {
-            squareBuffer.setRotating(2 * PI, t + 10.0);
+        if(!squareBuffer.isRotating() && !rotated) {
+            squareBuffer.setRotating(PI, t + 5.0);
+            rotated = true;
         }
         else {
             squareBuffer = squareBuffer.rotate(t);
