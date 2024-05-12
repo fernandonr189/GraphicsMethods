@@ -75,13 +75,13 @@ public class Canvas extends JFrame implements Runnable{
         g2.drawImage(canvas, 0, 0, null);
 
 
-        circleBuffer.draw(400, 400, g2);
+        squareBuffer.draw(400, 400, g2);
 
 
         if(seconds % 5 == 0 && !latch && seconds > 0) {
             latch = true;
             System.out.println("Rotate method called");
-            circleBuffer = circleBuffer.rotate(PI / 4);
+            squareBuffer = squareBuffer.rotate(PI / 4);
         }
         else if (seconds % 2 == 0 && seconds % 10 != 0) {
             latch = false;

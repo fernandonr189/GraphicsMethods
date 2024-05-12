@@ -25,25 +25,25 @@ public class SquareBuilder implements BuildMethods{
             isInitialized = true;
         }
 
-        buffer.DDALine(
+        buffer.BresenhamLine(
                 (int) floor(points[0].getX()),
                 (int) floor(points[0].getY()),
                 (int) floor(points[1].getX()),
                 (int) floor(points[1].getY()),
                 Color.red);
-        buffer.DDALine(
+        buffer.BresenhamLine(
                 (int) floor(points[1].getX()),
                 (int) floor(points[1].getY()),
                 (int) floor(points[2].getX()),
                 (int) floor(points[2].getY()),
                 Color.red);
-        buffer.DDALine(
+        buffer.BresenhamLine(
                 (int) floor(points[2].getX()),
                 (int) floor(points[2].getY()),
                 (int) floor(points[3].getX()),
                 (int) floor(points[3].getY()),
                 Color.red);
-        buffer.DDALine(
+        buffer.BresenhamLine(
                 (int) floor(points[3].getX()),
                 (int) floor(points[3].getY()),
                 (int) floor(points[0].getX()),

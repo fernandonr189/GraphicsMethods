@@ -37,14 +37,14 @@ public class CircleBuilder implements BuildMethods{
                 (int) floor(points[0].getY()),
                 Color.blue);
 
-        buffer.DDALine(
+        buffer.BresenhamLine(
                 (int) floor(points[1].getX()),
                 (int) floor(points[1].getY()),
                 (int) floor(points[2].getX()),
                 (int) floor(points[2].getY()),
                 Color.blue);
 
-        buffer.DDALine(
+        buffer.BresenhamLine(
                 (int) floor(points[3].getX()),
                 (int) floor(points[3].getY()),
                 (int) floor(points[4].getX()),

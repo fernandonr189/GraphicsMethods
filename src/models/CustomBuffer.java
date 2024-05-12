@@ -94,7 +94,7 @@ public class CustomBuffer extends BufferedImage {
 
         if (dx > dy){
             p = 2 * dy - dx;
-            for (int i = 0; i <= dx; i++){
+            for (int i = 0; i < dx; i++){
                 if (p >= 0){
                     y += incY;
                     p += 2 * (dy - dx);
@@ -108,7 +108,7 @@ public class CustomBuffer extends BufferedImage {
         }
         else {
             p = 2 * dx - dy;
-            for (int i = 0; i <= dy; i++){
+            for (int i = 0; i < dy; i++){
                 if (p >= 0){
                     x += incX;
                     p += 2 * (dx - dy);
