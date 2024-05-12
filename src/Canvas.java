@@ -1,6 +1,6 @@
-import models.CircleBuilder;
+import builders.CircleBuilder;
 import models.CustomBuffer;
-import models.SquareBuilder;
+import builders.SquareBuilder;
 
 import javax.swing.*;
 import java.awt.*;

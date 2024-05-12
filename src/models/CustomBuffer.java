@@ -185,7 +185,6 @@ public class CustomBuffer extends BufferedImage {
             double newSize = m * (t) + b;
             double factor = newSize / (double) this.getWidth();
 
-            //System.out.println("target: " + targetSize + " new: " + newSize);
             if(isGrowing && (int) floor(newSize) >= targetSize) {
                 this.isScaling = false;
                 return this;

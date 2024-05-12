@@ -1,12 +1,16 @@
-package models;
+package builders;
+
+import models.BuildMethods;
+import models.CustomBuffer;
+import models.Point;
 
 import java.awt.*;
 
 import static java.lang.Math.*;
 
-public class SquareBuilder implements BuildMethods{
+public class SquareBuilder implements BuildMethods {
 
-    private Point[] points;
+    private models.Point[] points;
     private boolean isInitialized = false;
     private double height;
     private double width;
@@ -16,12 +20,12 @@ public class SquareBuilder implements BuildMethods{
         if(!isInitialized) {
             height = buffer.getHeight();
             width = buffer.getWidth();
-            points = new Point[5];
-            points[0] = new Point(20, 20);
-            points[1] = new Point(180, 20);
-            points[2] = new Point(180, 180);
-            points[3] = new Point(20, 180);
-            points[4] = new Point(100, 100);
+            points = new models.Point[5];
+            points[0] = new models.Point(20, 20);
+            points[1] = new models.Point(180, 20);
+            points[2] = new models.Point(180, 180);
+            points[3] = new models.Point(20, 180);
+            points[4] = new models.Point(100, 100);
             isInitialized = true;
         }
 
@@ -62,7 +66,7 @@ public class SquareBuilder implements BuildMethods{
         buffer = new CustomBuffer((int) floor(width), (int) floor(height), buffer.getType(), this);
 
         for(int i = 0; i < points.length; i++) {
-            points[i] = new Point(
+            points[i] = new models.Point(
                     points[i].getX() * factor,
                     points[i].getY() * factor);
         }
@@ -91,7 +95,7 @@ public class SquareBuilder implements BuildMethods{
             double newAngle = originalAngle - angle;
             double newX = b * cos(newAngle) + center[0];
             double newY = b * sin(newAngle) + center[1];
-            points[i] = new Point(newX, newY);
+            points[i] = new models.Point(newX, newY);
 
             if(points[i].getX() > highestX) {
                 highestX = points[i].getX();
