@@ -23,7 +23,6 @@ public class CustomBuffer extends BufferedImage {
 
     private double targetAngle;
     private double targetTimeRotation;
-    private double originalAngle;
     private double originalTimeRotation;
     private double previousAngle;
     private boolean isRotating = false;
@@ -170,22 +169,15 @@ public class CustomBuffer extends BufferedImage {
         return this.isRotating;
     }
 
-    public void setScaling(int targetSize, double targetTime) {
+    public void setScaling(int targetSize, double targetTime, double initialTime) {
         this.isScaling = true;
         this.targetSize = targetSize;
         this.targetTime = targetTime;
         this.originalSize = this.getWidth();
-        this.originalTime = (double) System.currentTimeMillis() / 1000;
+        this.originalTime = ((double) System.currentTimeMillis() / 1000) - initialTime;
         isGrowing = targetSize > originalSize;
     }
 
-    public void setRotating(double targetAngle, double targetTime) {
-        this.isRotating = true;
-        this.targetAngle = targetAngle;
-        this.targetTimeRotation = targetTime;
-        this.originalAngle = 0;
-        this.originalTime = (double) System.currentTimeMillis() / 1000;
-    }
 
 
     public void resumeScaling(double targetSize, double targetTime, double originalSize, double originalTime) {
@@ -195,15 +187,6 @@ public class CustomBuffer extends BufferedImage {
         this.originalSize = originalSize;
         this.originalTime = originalTime;
         isGrowing = targetSize > originalSize;
-    }
-
-    public void resumeRotation(double targetAngle, double targetTime, double originalAngle, double originalTime, double previousAngle) {
-        this.isRotating = true;
-        this.targetAngle = targetAngle;
-        this.targetTimeRotation = targetTime;
-        this.originalAngle = originalAngle;
-        this.originalTimeRotation = originalTime;
-        this.previousAngle = previousAngle;
     }
 
     public CustomBuffer scale(double t) {
@@ -230,25 +213,35 @@ public class CustomBuffer extends BufferedImage {
         return this;
     }
 
+    public void setRotating(double targetAngle, double targetTime, double initialTime) {
+        this.isRotating = true;
+        this.targetAngle = targetAngle;
+        this.targetTimeRotation = targetTime;
+        this.previousAngle = 0;
+        this.originalTimeRotation = ((double) System.currentTimeMillis() / 1000) - initialTime;
+    }
+
+    private void resumeRotation(double targetAngle, double targetTime, double originalTime, double previousAngle) {
+        this.isRotating = true;
+        this.targetAngle = targetAngle;
+        this.targetTimeRotation = targetTime;
+        this.originalTimeRotation = originalTime;
+        this.previousAngle = previousAngle;
+    }
+
     public CustomBuffer rotate(double t){
         if(isRotating) {
-            double m = (targetAngle - originalAngle) / (targetTimeRotation - originalTimeRotation);
+            double angleDelta = 0;
+            double m = (targetAngle) / (targetTimeRotation - originalTimeRotation);
             double newAngle = m * t;
 
             if(newAngle > targetAngle) {
                 newAngle = targetAngle;
             }
-
-            double angleDelta = newAngle - previousAngle;
-
-
-            if (newAngle == targetAngle) {
-                isRotating = false;
-                return this;
-            }
+            angleDelta = newAngle - previousAngle;
 
             CustomBuffer rotatedBuffer = builder.rotate(this, angleDelta);
-            rotatedBuffer.resumeRotation(targetAngle, targetTimeRotation, originalAngle, originalTimeRotation, newAngle);
+            rotatedBuffer.resumeRotation(targetAngle, targetTimeRotation, originalTimeRotation, newAngle);
             return rotatedBuffer;
         }
         return this;
