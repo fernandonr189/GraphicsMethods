@@ -233,10 +233,13 @@ public class CustomBuffer extends BufferedImage {
         if(isRotating) {
             double angleDelta = 0;
             double m = (targetAngle) / (targetTimeRotation - originalTimeRotation);
-            double newAngle = m * t;
+            double newAngle = m * (t - originalTimeRotation);
 
             if(newAngle > targetAngle) {
                 newAngle = targetAngle;
+                angleDelta = newAngle - previousAngle;
+                isRotating = false;
+                return builder.rotate(this, angleDelta);
             }
             angleDelta = newAngle - previousAngle;
 

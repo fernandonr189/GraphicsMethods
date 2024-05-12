@@ -67,6 +67,8 @@ public class Canvas extends JFrame implements Runnable{
 
 
 
+    private int turns = 0;
+
     private BufferedImage mergeBuffers() {
         BufferedImage newImage = new BufferedImage(800, 800, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = newImage.createGraphics();
@@ -74,8 +76,9 @@ public class Canvas extends JFrame implements Runnable{
         g2.drawImage(canvas, 0, 0, null);
         //squareBuffer.draw(400, 400, g2);
 
-        if(!circleBuffer.isRotating()) {
+        if(!circleBuffer.isRotating() && turns <= 3) {
             circleBuffer.setRotating(2 * PI, t + 2.0, t);
+            turns++;
         }
         else {
             circleBuffer = circleBuffer.rotate(t);
