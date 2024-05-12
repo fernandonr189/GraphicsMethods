@@ -206,7 +206,7 @@ public class CustomBuffer extends BufferedImage {
                 return this;
             }
 
-            CustomBuffer scaledBuffer = builder.scale(this, factor);
+            CustomBuffer scaledBuffer = builder.scale(this, factor, true);
             scaledBuffer.resumeScaling(targetSize, targetTime, originalSize, originalTime);
             return scaledBuffer;
         }
@@ -239,11 +239,11 @@ public class CustomBuffer extends BufferedImage {
                 newAngle = targetAngle;
                 angleDelta = newAngle - previousAngle;
                 isRotating = false;
-                return builder.rotate(this, angleDelta);
+                return builder.rotate(this, angleDelta, true);
             }
             angleDelta = newAngle - previousAngle;
 
-            CustomBuffer rotatedBuffer = builder.rotate(this, angleDelta);
+            CustomBuffer rotatedBuffer = builder.rotate(this, angleDelta, true);
             rotatedBuffer.resumeRotation(targetAngle, targetTimeRotation, originalTimeRotation, newAngle);
             return rotatedBuffer;
         }

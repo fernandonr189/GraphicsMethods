@@ -60,7 +60,7 @@ public class SquareBuilder implements BuildMethods {
     }
 
     @Override
-    public CustomBuffer scale(CustomBuffer buffer, double factor) {
+    public CustomBuffer scale(CustomBuffer buffer, double factor, boolean rebuild) {
         width = width * factor;
         height = height * factor;
         buffer = new CustomBuffer((int) floor(width), (int) floor(height), buffer.getType(), this);
@@ -76,7 +76,7 @@ public class SquareBuilder implements BuildMethods {
     }
 
     @Override
-    public CustomBuffer rotate(CustomBuffer buffer, double angle) { 
+    public CustomBuffer rotate(CustomBuffer buffer, double angle, boolean rebuild) {
         double[] center = {
             (double) buffer.getWidth() / 2,
             (double) buffer.getHeight() / 2
