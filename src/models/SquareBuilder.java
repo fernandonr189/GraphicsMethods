@@ -49,10 +49,6 @@ public class SquareBuilder implements BuildMethods{
                 (int) floor(points[0].getX()),
                 (int) floor(points[0].getY()),
                 Color.red);
-        buffer.floodFill(
-                (int) floor(points[4].getX()),
-                (int) floor(points[4].getY()),
-                Color.red);
     }
 
     @Override
@@ -114,16 +110,21 @@ public class SquareBuilder implements BuildMethods{
 
         if(lowestX < 0) {
             for(int i = 0; i < points.length; i++) {
-                points[i] = new Point(points[i].getX() + ceil(abs(lowestX)), points[i].getY());
+                points[i] = new Point(points[i].getX() + ceil(abs(lowestX)) + 20, points[i].getY());
             }
         }
         if(lowestY < 0) {
             for(int i = 0; i < points.length; i++) {
-                points[i] = new Point(points[i].getX(), points[i].getY() + ceil(abs(lowestY)));
+                points[i] = new Point(points[i].getX(), points[i].getY() + ceil(abs(lowestY)) + 20);
             }
         }
 
-        buffer = new CustomBuffer((int) floor(highestX) + 5, (int) floor(highestY) + 5, buffer.getType(), this);
+        int bufferWidth = (int) floor(highestX) - (int) floor(lowestX) + 40;
+        int bufferHeight = (int) floor(highestY) - (int) floor(lowestY) + 40;
+
+        buffer = new CustomBuffer(bufferWidth, bufferHeight, buffer.getType(), this);
+
+
 
         build(buffer);
         return buffer;
