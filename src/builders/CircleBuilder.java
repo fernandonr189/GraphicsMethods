@@ -63,15 +63,43 @@ public class CircleBuilder implements BuildMethods {
     public CustomBuffer scale(CustomBuffer buffer, double factor, boolean rebuild) {
         width = width * factor;
         height = height * factor;
-        buffer = new CustomBuffer((int) floor(width), (int) floor(height), buffer.getType(), this);
+
+        double lowestX = buffer.getWidth();
+        double lowestY = buffer.getHeight();
+        double highestX = 0;
+        double highestY = 0;
         
         for(int i = 0; i < points.length; i++) {
             points[i] = new models.Point(
                 points[i].getX() * factor,
                 points[i].getY() * factor);
+
+            if(points[i].getX() > highestX) {
+                highestX = points[i].getX();
+            }
+            if(points[i].getY() > highestY) {
+                highestY = points[i].getY();
+            }
+            if(points[i].getX() < lowestX) {
+                lowestX = points[i].getX();
+            }
+            if(points[i].getY() < lowestY) {
+                lowestY = points[i].getY();
+            }
         }
 
+        for(int i = 0; i < points.length; i++) {
+            double newX = points[i].getX() - lowestX + 20;
+            double newY = points[i].getY() - lowestY + 20;
+            points[i] = new Point(newX, newY);
+        }
+
+        int bufferWidth = (int) floor(highestX - lowestX) + 40;
+        int bufferHeight = (int) floor(highestY - lowestY) + 40;
+
         radius = radius * factor;
+
+        buffer = new CustomBuffer(bufferWidth, bufferHeight, buffer.getType(), this);
 
         build(buffer);
         return buffer;

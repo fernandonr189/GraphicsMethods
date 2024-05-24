@@ -74,7 +74,7 @@ public class Canvas extends JFrame implements Runnable{
         Graphics2D g2 = newImage.createGraphics();
 
         g2.drawImage(canvas, 0, 0, null);
-        //squareBuffer.draw(400, 400, g2);
+        circleBuffer.draw(400, 400, g2);
 
         if(circleBuffer.isScaling()) {
             circleBuffer = circleBuffer.scale(t);
@@ -90,10 +90,10 @@ public class Canvas extends JFrame implements Runnable{
         }
 
         if(circleBuffer.isRotating()) {
-            circleBuffer = circleBuffer.rotate(t);
+            //circleBuffer = circleBuffer.rotate(t);
         }
         else {
-            circleBuffer.setRotating(2 * PI, t, 2.0);
+            //circleBuffer.setRotating(2 * PI, t, 2.0);
         }
 
 
