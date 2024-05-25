@@ -23,11 +23,9 @@ public class CustomBuffer extends BufferedImage {
     private boolean isRotating;
 
     private boolean isScaling;
-    private boolean isGrowing;
-    private double targetScale;
-    private double scaleSlope;
-    private double scaleOffset;
     private double currentScale;
+
+    private Scaler scaler;
 
     public CustomBuffer(int width, int height, int imageType, BuildMethods builder) {
         super(width, height, imageType);
@@ -175,34 +173,28 @@ public class CustomBuffer extends BufferedImage {
 
     public void setScaling(double _targetScale, double _initialTime, double _time) {
         isScaling = true;
-        targetScale = _targetScale;
-        isGrowing = targetScale > currentScale;
-        scaleSlope = (targetScale - currentScale) / (_time);
-        scaleOffset = currentScale - (scaleSlope * _initialTime);
+        scaler = new Scaler(_targetScale, _initialTime, _time, currentScale);
     }
 
 
 
-    public void resumeScaling(double _scaleSlope, double _scaleOffset, boolean _isGrowing, double _targetScale) {
-        scaleSlope = _scaleSlope;
-        scaleOffset = _scaleOffset;
-        isGrowing = _isGrowing;
-        targetScale = _targetScale;
+    public void resumeScaling(Scaler scaler) {
         isScaling = true;
+        this.scaler = scaler;
     }
 
     public CustomBuffer scale(double t) {
         if(isScaling) {
-            double newScale = (scaleSlope * (t)) + scaleOffset;
+            double newScale = scaler.newScale(t);
             currentScale = newScale;
 
-            if((isGrowing && newScale >= targetScale) || (!isGrowing && newScale <= targetScale)) {
+            if(scaler.isFinished()) {
                 isScaling = false;
                 return this;
             }
 
             CustomBuffer scaledBuffer = builder.scale(this, newScale, true);
-            scaledBuffer.resumeScaling(scaleSlope, scaleOffset, isGrowing, targetScale);
+            scaledBuffer.resumeScaling(scaler);
             return scaledBuffer;
         }
         else {
