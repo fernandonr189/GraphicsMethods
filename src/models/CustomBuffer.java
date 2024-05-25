@@ -20,17 +20,20 @@ public class CustomBuffer extends BufferedImage {
     private double targetTimeRotation;
     private double originalTimeRotation;
     private double previousAngle;
-    private boolean isRotating = false;
+    private boolean isRotating;
 
     private boolean isScaling;
     private boolean isGrowing;
     private double targetScale;
     private double scaleSlope;
     private double scaleOffset;
+    private double currentScale;
 
     public CustomBuffer(int width, int height, int imageType, BuildMethods builder) {
         super(width, height, imageType);
         this.builder = builder;
+        this.isRotating = false;
+        this.currentScale = 1;
     }
 
     public void build() {
@@ -173,9 +176,9 @@ public class CustomBuffer extends BufferedImage {
     public void setScaling(double _targetScale, double _initialTime, double _time) {
         isScaling = true;
         targetScale = _targetScale;
-        isGrowing = targetScale > 1;
-        scaleSlope = (targetScale - 1) / (_time);
-        scaleOffset = 1 - (scaleSlope * _initialTime);
+        isGrowing = targetScale > currentScale;
+        scaleSlope = (targetScale - currentScale) / (_time);
+        scaleOffset = currentScale - (scaleSlope * _initialTime);
     }
 
 
@@ -191,6 +194,7 @@ public class CustomBuffer extends BufferedImage {
     public CustomBuffer scale(double t) {
         if(isScaling) {
             double newScale = (scaleSlope * (t)) + scaleOffset;
+            currentScale = newScale;
 
             if((isGrowing && newScale >= targetScale) || (!isGrowing && newScale <= targetScale)) {
                 isScaling = false;

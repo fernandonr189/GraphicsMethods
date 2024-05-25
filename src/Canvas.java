@@ -82,8 +82,11 @@ public class Canvas extends JFrame implements Runnable{
         else {
             if(isGrowing) {
                 circleBuffer.setScaling(1.5, t, 1.0);
-                isGrowing = false;
             }
+            else {
+                circleBuffer.setScaling(0.5, t, 1.0);
+            }
+            isGrowing = !isGrowing;
         }
 
         if(circleBuffer.isRotating()) {
