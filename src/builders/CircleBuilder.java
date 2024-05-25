@@ -11,7 +11,9 @@ import static java.lang.Math.*;
 public class CircleBuilder implements BuildMethods {
 
     private models.Point[] points;
+    private models.Point[] originalPoints;
     private double radius;
+    private double originalRadius;
     private boolean isInitialized = false;
     private double height;
     private double width;
@@ -30,7 +32,9 @@ public class CircleBuilder implements BuildMethods {
             points[2] = new models.Point(180, 180);
             points[3] = new models.Point(180, 20);
             points[4] = new models.Point(20, 180);
+            originalPoints = points.clone();
             radius = 80;
+            originalRadius = radius;
             isInitialized = true;
         }
 
@@ -71,8 +75,8 @@ public class CircleBuilder implements BuildMethods {
         
         for(int i = 0; i < points.length; i++) {
             points[i] = new models.Point(
-                points[i].getX() * factor,
-                points[i].getY() * factor);
+                originalPoints[i].getX() * factor,
+                originalPoints[i].getY() * factor);
 
             if(points[i].getX() > highestX) {
                 highestX = points[i].getX();
@@ -97,7 +101,7 @@ public class CircleBuilder implements BuildMethods {
         int bufferWidth = (int) floor(highestX - lowestX) + 40;
         int bufferHeight = (int) floor(highestY - lowestY) + 40;
 
-        radius = radius * factor;
+        radius = originalRadius * factor;
 
         buffer = new CustomBuffer(bufferWidth, bufferHeight, buffer.getType(), this);
 

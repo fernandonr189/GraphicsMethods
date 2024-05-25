@@ -17,7 +17,7 @@ public class Canvas extends JFrame implements Runnable{
     private double t;
     private int seconds;
 
-    private final double initialTime =  (double) System.currentTimeMillis() / 1000;
+    private final double initialTime;
 
     CircleBuilder circleBuilder = new CircleBuilder();
     SquareBuilder squareBuilder = new SquareBuilder();
@@ -25,7 +25,7 @@ public class Canvas extends JFrame implements Runnable{
     CustomBuffer squareBuffer = new CustomBuffer(200, 200, BufferedImage.TYPE_INT_ARGB, squareBuilder);
 
     public Canvas(int width, int height) {
-        t = (double) (System.currentTimeMillis() / 1000) - initialTime;
+        initialTime = (double) System.currentTimeMillis() / 1000;
         canvas = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         setTitle("Metodos");
         setSize(width, height);
@@ -81,12 +81,9 @@ public class Canvas extends JFrame implements Runnable{
         }
         else {
             if(isGrowing) {
-                circleBuffer.setScaling(350, t, 1.0);
+                circleBuffer.setScaling(1.5, t, 1.0);
+                isGrowing = false;
             }
-            else {
-                circleBuffer.setScaling(50, t, 1.0);
-            }
-            isGrowing = !isGrowing;
         }
 
         if(circleBuffer.isRotating()) {

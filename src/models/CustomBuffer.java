@@ -1,5 +1,6 @@
 package models;
 
+import javax.print.attribute.standard.Finishings;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
@@ -13,12 +14,6 @@ public class CustomBuffer extends BufferedImage {
     private final BuildMethods builder;
 
 
-    private double targetSize;
-    private double targetTime;
-    private double originalSize;
-    private double originalTime;
-    private boolean isScaling = false;
-    private boolean isGrowing = false;
 
 
     private double targetAngle;
@@ -26,6 +21,12 @@ public class CustomBuffer extends BufferedImage {
     private double originalTimeRotation;
     private double previousAngle;
     private boolean isRotating = false;
+
+    private boolean isScaling;
+    private boolean isGrowing;
+    private double targetScale;
+    private double scaleSlope;
+    private double scaleOffset;
 
     public CustomBuffer(int width, int height, int imageType, BuildMethods builder) {
         super(width, height, imageType);
@@ -169,48 +170,40 @@ public class CustomBuffer extends BufferedImage {
         return this.isRotating;
     }
 
-    public void setScaling(int targetSize, double initialTime, double timeDelta) {
-        this.isScaling = true;
-        this.targetSize = targetSize;
-        this.targetTime = initialTime + timeDelta;
-        this.originalSize = this.getWidth();
-        this.originalTime = initialTime;
-        isGrowing = targetSize > originalSize;
+    public void setScaling(double _targetScale, double _initialTime, double _time) {
+        isScaling = true;
+        targetScale = _targetScale;
+        isGrowing = targetScale > 1;
+        scaleSlope = (targetScale - 1) / (_time);
+        scaleOffset = 1 - (scaleSlope * _initialTime);
     }
 
 
 
-    public void resumeScaling(double targetSize, double targetTime, double originalSize, double originalTime) {
-        this.isScaling = true;
-        this.targetSize = targetSize;
-        this.targetTime = targetTime;
-        this.originalSize = originalSize;
-        this.originalTime = originalTime;
-        isGrowing = targetSize > originalSize;
+    public void resumeScaling(double _scaleSlope, double _scaleOffset, boolean _isGrowing, double _targetScale) {
+        scaleSlope = _scaleSlope;
+        scaleOffset = _scaleOffset;
+        isGrowing = _isGrowing;
+        targetScale = _targetScale;
+        isScaling = true;
     }
 
     public CustomBuffer scale(double t) {
         if(isScaling) {
+            double newScale = (scaleSlope * (t)) + scaleOffset;
 
-            double m = (targetSize - originalSize) / (targetTime - originalTime);
-            double b = originalSize - (m * originalTime);
-            double newSize = m * (t) + b;
-            double factor = newSize / (double) this.getWidth();
-
-            if(isGrowing && (int) floor(newSize) >= targetSize) {
-                this.isScaling = false;
-                return this;
-            }
-            if(!isGrowing && (int) floor(newSize) <= targetSize) {
-                this.isScaling = false;
+            if((isGrowing && newScale >= targetScale) || (!isGrowing && newScale <= targetScale)) {
+                isScaling = false;
                 return this;
             }
 
-            CustomBuffer scaledBuffer = builder.scale(this, factor, true);
-            scaledBuffer.resumeScaling(targetSize, targetTime, originalSize, originalTime);
+            CustomBuffer scaledBuffer = builder.scale(this, newScale, true);
+            scaledBuffer.resumeScaling(scaleSlope, scaleOffset, isGrowing, targetScale);
             return scaledBuffer;
         }
-        return this;
+        else {
+            return this;
+        }
     }
 
     public void setRotating(double targetAngle, double initialTime, double timeDelta) {
