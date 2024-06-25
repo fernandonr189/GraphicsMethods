@@ -1,6 +1,4 @@
 package models;
-
-import javax.print.attribute.standard.Finishings;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
@@ -58,7 +56,6 @@ public class CustomBuffer extends BufferedImage {
         }
     }
 
-
     public void basicCircle(int xc, int yc, int r, Color a) {
         int x1 = xc - r;
         int x2 = xc + r;
@@ -79,6 +76,7 @@ public class CustomBuffer extends BufferedImage {
             pixel((int) xb, y, a, 255);
         }
     }
+    
     public void BresenhamLine(int x1, int y1, int x2, int y2, Color a) {
         int dy = y2 - y1;
         int dx = x2 - x1;
@@ -170,8 +168,6 @@ public class CustomBuffer extends BufferedImage {
         scaler = new Scaler(_targetScale, _initialTime, _time, currentScale);
     }
 
-
-
     public void resumeScaling(Scaler scaler) {
         isScaling = true;
         this.scaler = scaler;
@@ -227,7 +223,6 @@ public class CustomBuffer extends BufferedImage {
         return this;
     }
 
-    // this method must be called repeatedly in a period of time to create a movement
     public void movement(double t, int x0, int y0, Graphics graphics, Function<Double, Integer> xParam, Function<Double, Integer> yParam) {
         int x = xParam.apply(t) + x0 - this.getWidth() / 2;
         int y = yParam.apply(t) + y0 - this.getHeight() / 2;
