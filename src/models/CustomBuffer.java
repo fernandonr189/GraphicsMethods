@@ -12,21 +12,15 @@ import static java.lang.Math.*;
 public class CustomBuffer extends BufferedImage {
 
     private final BuildMethods builder;
-
-
-
-
-    private double targetAngle;
-    private double targetTimeRotation;
-    private double originalTimeRotation;
-    private double previousAngle;
-    private boolean isRotating;
-
+    
+    private Scaler scaler;
     private boolean isScaling;
     private double currentScale;
-
-    private Scaler scaler;
-
+    
+    private Rotator rotator;
+    private double currentAngle;
+    private boolean isRotating;
+    
     public CustomBuffer(int width, int height, int imageType, BuildMethods builder) {
         super(width, height, imageType);
         this.builder = builder;
@@ -204,36 +198,30 @@ public class CustomBuffer extends BufferedImage {
 
     public void setRotating(double targetAngle, double initialTime, double timeDelta) {
         this.isRotating = true;
-        this.targetAngle = targetAngle;
-        this.targetTimeRotation = initialTime + timeDelta;
-        this.previousAngle = 0;
-        this.originalTimeRotation = initialTime;
+        this.rotator = new Rotator(targetAngle, initialTime, timeDelta);
     }
 
-    private void resumeRotation(double targetAngle, double targetTime, double originalTime, double previousAngle) {
+    private void resumeRotation(Rotator rotator, double previousAngle) {
         this.isRotating = true;
-        this.targetAngle = targetAngle;
-        this.targetTimeRotation = targetTime;
-        this.originalTimeRotation = originalTime;
-        this.previousAngle = previousAngle;
+        this.currentAngle = previousAngle;
+        this.rotator = rotator;
     }
 
     public CustomBuffer rotate(double t){
         if(isRotating) {
             double angleDelta = 0;
-            double m = (targetAngle) / (targetTimeRotation - originalTimeRotation);
-            double newAngle = m * (t - originalTimeRotation);
+            double newAngle = rotator.newAngle(t);
 
-            if(newAngle > targetAngle) {
-                newAngle = targetAngle;
-                angleDelta = newAngle - previousAngle;
+            if(rotator.isFinished()) {
+                newAngle = rotator.getTargetAngle();
+                angleDelta = newAngle - currentAngle;
                 isRotating = false;
                 return builder.rotate(this, angleDelta, true);
             }
-            angleDelta = newAngle - previousAngle;
+            angleDelta = newAngle - currentAngle;
 
             CustomBuffer rotatedBuffer = builder.rotate(this, angleDelta, true);
-            rotatedBuffer.resumeRotation(targetAngle, targetTimeRotation, originalTimeRotation, newAngle);
+            rotatedBuffer.resumeRotation(this.rotator, newAngle);
             return rotatedBuffer;
         }
         return this;
