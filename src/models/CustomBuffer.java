@@ -12,18 +12,10 @@ public class CustomBuffer extends BufferedImage {
     private final BuildMethods builder;
     
     private Transformations transformations = new Transformations();
-
-    private boolean isScaling;
-    private double currentScale;
-    
-    private double currentAngle;
-    private boolean isRotating;
     
     public CustomBuffer(int width, int height, int imageType, BuildMethods builder) {
         super(width, height, imageType);
         this.builder = builder;
-        this.isRotating = false;
-        this.currentScale = 1;
     }
 
     public void build() {
@@ -156,35 +148,37 @@ public class CustomBuffer extends BufferedImage {
     }
 
     public boolean isScaling() {
-        return this.isScaling;
+        return transformations.isScaling();
     }
 
     public boolean isRotating() {
-        return this.isRotating;
+        return transformations.isRotating();
     }
 
+    @SuppressWarnings("unused")
     private void resumeTransformations(Transformations _transformations) {
         this.transformations = _transformations;
     }
 
     public void resumeScaling(Scaler scaler) {
-        isScaling = true;
+        transformations.setScaling(true);
         transformations.setScaler(scaler);
     }
     
     public void setScaling(double _targetScale, double _initialTime, double _time) {
-        isScaling = true;
+        transformations.setScaling(true);
+        double currentScale = transformations.getCurrentScale();
         transformations.setScaler(new Scaler(_targetScale, _initialTime, _time, currentScale));
     }
 
     public CustomBuffer scale(double t) {
-        if(isScaling) {
+        if(transformations.isScaling()) {
             Scaler scaler = transformations.getScaler();
             double newScale = scaler.newScale(t);
-            currentScale = newScale;
+            transformations.setCurrentScale(newScale);
 
             if(scaler.isFinished()) {
-                isScaling = false;
+                transformations.setScaling(false);
                 return this;
             }
 
@@ -198,26 +192,27 @@ public class CustomBuffer extends BufferedImage {
     }
 
     private void resumeRotation(Rotator rotator, double previousAngle) {
-        this.isRotating = true;
-        this.currentAngle = previousAngle;
+        transformations.setRotating(true);
+        transformations.setCurrentAngle(previousAngle);
         transformations.setRotator(rotator);
     }
 
     public void setRotating(double _targetAngle, double _initialTime, double _time) {
-        this.isRotating = true;
+        transformations.setRotating(true);
         transformations.setRotator(new Rotator(_targetAngle, _initialTime, _time));
     }
 
     public CustomBuffer rotate(double t){
-        if(isRotating) {
+        if(transformations.isRotating()) {
             Rotator rotator = transformations.getRotator();
+            double currentAngle = transformations.getCurrentAngle();
             double angleDelta = 0;
             double newAngle = rotator.newAngle(t);
 
             if(rotator.isFinished()) {
                 newAngle = rotator.getTargetAngle();
                 angleDelta = newAngle - currentAngle;
-                isRotating = false;
+                transformations.setRotating(false);
                 return builder.rotate(this, angleDelta, true);
             }
             angleDelta = newAngle - currentAngle;

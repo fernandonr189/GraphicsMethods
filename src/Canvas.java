@@ -68,6 +68,8 @@ public class Canvas extends JFrame implements Runnable{
 
 
     private boolean isGrowing = true;
+    private boolean isScaling = true;
+    private boolean isRotating = false;
 
     private BufferedImage mergeBuffers() {
         BufferedImage newImage = new BufferedImage(800, 800, BufferedImage.TYPE_INT_ARGB);
@@ -76,24 +78,29 @@ public class Canvas extends JFrame implements Runnable{
         g2.drawImage(canvas, 0, 0, null);
         circleBuffer.draw(400, 400, g2);
 
-        if(circleBuffer.isScaling()) {
-            circleBuffer = circleBuffer.scale(t);
-        }
-        else {
-            if(isGrowing) {
-                circleBuffer.setScaling(1.5, t, 1.0);
+
+        if(isScaling) {
+            if(circleBuffer.isScaling()) {
+                circleBuffer = circleBuffer.scale(t);
             }
             else {
-                circleBuffer.setScaling(0.5, t, 1.0);
+                if(isGrowing) {
+                    circleBuffer.setScaling(1.5, t, 1.0);
+                }
+                else {
+                    circleBuffer.setScaling(0.5, t, 1.0);
+                }
+                isGrowing = !isGrowing;
             }
-            isGrowing = !isGrowing;
         }
 
-        if(circleBuffer.isRotating()) {
-            //circleBuffer = circleBuffer.rotate(t);
-        }
-        else {
-            //circleBuffer.setRotating(2 * PI, t, 2.0);
+        if(isRotating) {
+            if(circleBuffer.isRotating()) {
+                //circleBuffer = circleBuffer.rotate(t);
+            }
+            else {
+                //circleBuffer.setRotating(2 * PI, t, 2.0);
+            }
         }
 
 
