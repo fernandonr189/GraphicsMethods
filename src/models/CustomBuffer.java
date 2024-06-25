@@ -11,11 +11,11 @@ public class CustomBuffer extends BufferedImage {
 
     private final BuildMethods builder;
     
-    private Scaler scaler;
+    private Transformations transformations = new Transformations();
+
     private boolean isScaling;
     private double currentScale;
     
-    private Rotator rotator;
     private double currentAngle;
     private boolean isRotating;
     
@@ -163,18 +163,23 @@ public class CustomBuffer extends BufferedImage {
         return this.isRotating;
     }
 
-    public void setScaling(double _targetScale, double _initialTime, double _time) {
-        isScaling = true;
-        scaler = new Scaler(_targetScale, _initialTime, _time, currentScale);
+    private void resumeTransformations(Transformations _transformations) {
+        this.transformations = _transformations;
     }
 
     public void resumeScaling(Scaler scaler) {
         isScaling = true;
-        this.scaler = scaler;
+        transformations.setScaler(scaler);
+    }
+    
+    public void setScaling(double _targetScale, double _initialTime, double _time) {
+        isScaling = true;
+        transformations.setScaler(new Scaler(_targetScale, _initialTime, _time, currentScale));
     }
 
     public CustomBuffer scale(double t) {
         if(isScaling) {
+            Scaler scaler = transformations.getScaler();
             double newScale = scaler.newScale(t);
             currentScale = newScale;
 
@@ -192,19 +197,20 @@ public class CustomBuffer extends BufferedImage {
         }
     }
 
-    public void setRotating(double targetAngle, double initialTime, double timeDelta) {
-        this.isRotating = true;
-        this.rotator = new Rotator(targetAngle, initialTime, timeDelta);
-    }
-
     private void resumeRotation(Rotator rotator, double previousAngle) {
         this.isRotating = true;
         this.currentAngle = previousAngle;
-        this.rotator = rotator;
+        transformations.setRotator(rotator);
+    }
+
+    public void setRotating(double _targetAngle, double _initialTime, double _time) {
+        this.isRotating = true;
+        transformations.setRotator(new Rotator(_targetAngle, _initialTime, _time));
     }
 
     public CustomBuffer rotate(double t){
         if(isRotating) {
+            Rotator rotator = transformations.getRotator();
             double angleDelta = 0;
             double newAngle = rotator.newAngle(t);
 
@@ -217,7 +223,7 @@ public class CustomBuffer extends BufferedImage {
             angleDelta = newAngle - currentAngle;
 
             CustomBuffer rotatedBuffer = builder.rotate(this, angleDelta, true);
-            rotatedBuffer.resumeRotation(this.rotator, newAngle);
+            rotatedBuffer.resumeRotation(rotator, newAngle);
             return rotatedBuffer;
         }
         return this;
